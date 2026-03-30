@@ -12,10 +12,12 @@ export default function Admin() {
     title: '', author: '', difficulty: 'Beginner',
     time_estimate: 'Under 2h', category: 'Accessories',
     format: 'both', tutorial_url: '', image_url: '',
+    yarn_image_url: '', hook_image_url: '',   // ← ADDED
     description: '', yarn_affiliate: '', yarn_name: '',
     yarn_price: '', hook_affiliate: '', hook_name: '',
     hook_price: '', is_published: true
   }
+
   const [form, setForm] = useState(empty)
 
   useEffect(() => { fetchPatterns() }, [])
@@ -73,6 +75,8 @@ export default function Admin() {
       format: p.format || 'both',
       tutorial_url: p.tutorial_url || '',
       image_url: p.image_url || '',
+      yarn_image_url: p.yarn_image_url || '',   // ← ADDED
+      hook_image_url: p.hook_image_url || '',   // ← ADDED
       description: p.description || '',
       yarn_affiliate: p.yarn_affiliate || '',
       yarn_name: p.yarn_name || '',
@@ -117,6 +121,7 @@ export default function Admin() {
 
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: 24, display: 'grid', gridTemplateColumns: '400px 1fr', gap: 24 }}>
 
+        {/* LEFT COLUMN — FORM */}
         <div style={{ background: 'white', borderRadius: 16, padding: 24, border: '1px solid #eee', alignSelf: 'start' }}>
           <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20, color: '#1a1a1a' }}>
             {editingId ? 'Edit pattern' : 'Add new pattern'}
@@ -130,6 +135,8 @@ export default function Admin() {
           {sel('Format', 'format', ['both', 'video', 'pattern'])}
           {inp('Tutorial URL *', 'tutorial_url', 'https://...')}
           {inp('Image URL', 'image_url', 'https://...')}
+          {inp('Yarn Image URL', 'yarn_image_url', 'https://...')}
+          {inp('Hook Image URL', 'hook_image_url', 'https://...')}
 
           {form.image_url && (
             <img src={form.image_url} alt="preview"
@@ -171,17 +178,40 @@ export default function Admin() {
           )}
         </div>
 
+        {/* RIGHT COLUMN — PATTERN LIST */}
         <div>
           <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16, color: '#1a1a1a' }}>
             All patterns ({patterns.length})
           </h2>
+
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {patterns.map(p => (
               <div key={p.id} style={{ background: 'white', borderRadius: 12, padding: '14px 16px', border: '1px solid #eee', display: 'flex', alignItems: 'center', gap: 12 }}>
+
                 {p.image_url && (
-                  <img src={p.image_url} alt={p.title}
-                    style={{ width: 60, height: 60, objectFit: 'cover', borderRadius: 8, flexShrink: 0 }} />
+                  <img
+                    src={p.image_url}
+                    alt={p.title}
+                    style={{ width: 60, height: 60, objectFit: 'cover', borderRadius: 8 }}
+                  />
                 )}
+
+                {p.yarn_image_url && (
+                  <img
+                    src={p.yarn_image_url}
+                    alt="Yarn"
+                    style={{ width: 40, height: 40, objectFit: 'cover', borderRadius: 6 }}
+                  />
+                )}
+
+                {p.hook_image_url && (
+                  <img
+                    src={p.hook_image_url}
+                    alt="Hook"
+                    style={{ width: 40, height: 40, objectFit: 'cover', borderRadius: 6 }}
+                  />
+                )}
+
                 <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: 600, fontSize: 14, color: '#1a1a1a' }}>{p.title}</div>
                   <div style={{ fontSize: 12, color: '#999' }}>by {p.author} · {p.difficulty} · {p.time_estimate}</div>
@@ -189,6 +219,7 @@ export default function Admin() {
                     {p.is_published ? 'Published' : 'Draft'}
                   </span>
                 </div>
+
                 <div style={{ display: 'flex', gap: 8 }}>
                   <button onClick={() => handleEdit(p)}
                     style={{ padding: '6px 14px', borderRadius: 8, border: '1.5px solid #3C3489', background: 'white', color: '#3C3489', fontSize: 13, cursor: 'pointer' }}>
@@ -199,6 +230,7 @@ export default function Admin() {
                     Delete
                   </button>
                 </div>
+
               </div>
             ))}
           </div>
