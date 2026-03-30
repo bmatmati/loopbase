@@ -2,292 +2,263 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabase'
 
-export default function Admin() {
+export default function Home() {
   const [patterns, setPatterns] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [message, setMessage] = useState('')
-  const [editingId, setEditingId] = useState(null)
-  const [imageUploading, setImageUploading] = useState(false)
+  const [difficulty, setDifficulty] = useState(null)
+  const [time, setTime] = useState(null)
+  const [format, setFormat] = useState(null)
+  const [search, setSearch] = useState('')
+  const [selected, setSelected] = useState(null)
 
-  const empty = {
-    title: '', author: '', difficulty: 'Beginner',
-    time_estimate: 'Under 2h', category: 'Accessories',
-    format: 'both', tutorial_url: '', image_url: '',
-    description: '', yarn_affiliate: '', hook_affiliate: '',
-    is_published: true
-  }
-  const [form, setForm] = useState(empty)
-
-  useEffect(() => { fetchPatterns() }, [])
+  useEffect(() => { fetchPatterns() }, [difficulty, time, format])
 
   async function fetchPatterns() {
-    const { data } = await supabase
-      .from('patterns')
-      .select('*')
-      .order('created_at', { ascending: false })
+    let query = supabase.from('patterns').select('*').eq('is_published', true)
+    if (difficulty) query = query.eq('difficulty', difficulty)
+    if (time) query = query.eq('time_estimate', time)
+    if (format) query = query.eq('format', format)
+    const { data } = await query
     setPatterns(data || [])
   }
 
-  function set(field, value) {
-    setForm(f => ({ ...f, [field]: value }))
-  }
-
-  async function uploadImage(file) {
-    setImageUploading(true)
-    const data = new FormData()
-    data.append('file', file)
-    data.append('upload_preset', 'loopbase-patterns')
-    const res = await fetch('https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload', {
-      method: 'POST', body: data
-    })
-    const json = await res.json()
-    setImageUploading(false)
-    if (json.secure_url) {
-      set('image_url', json.secure_url)
-      setMessage('Image uploaded!')
-    } else {
-      setMessage('Image upload failed — paste a URL manually instead')
-    }
-  }
-
-  async function handleSubmit() {
-    setLoading(true)
-    setMessage('')
-    if (!form.title || !form.tutorial_url) {
-      setMessage('Title and tutorial URL are required')
-      setLoading(false)
-      return
-    }
-    let result
-    if (editingId) {
-      result = await supabase.from('patterns').update(form).eq('id', editingId)
-    } else {
-      result = await supabase.from('patterns').insert([form])
-    }
-    if (result.error) {
-      setMessage('Error: ' + result.error.message)
-    } else {
-      setMessage(editingId ? 'Pattern updated!' : 'Pattern added!')
-      setForm(empty)
-      setEditingId(null)
-      fetchPatterns()
-    }
-    setLoading(false)
-  }
-
-  async function handleDelete(id) {
-    if (!confirm('Delete this pattern?')) return
-    await supabase.from('patterns').delete().eq('id', id)
-    fetchPatterns()
-  }
-
-  function handleEdit(p) {
-    setForm({
-      title: p.title || '',
-      author: p.author || '',
-      difficulty: p.difficulty || 'Beginner',
-      time_estimate: p.time_estimate || 'Under 2h',
-      category: p.category || 'Accessories',
-      format: p.format || 'both',
-      tutorial_url: p.tutorial_url || '',
-      image_url: p.image_url || '',
-      description: p.description || '',
-      yarn_affiliate: p.yarn_affiliate || '',
-      hook_affiliate: p.hook_affiliate || '',
-      is_published: p.is_published
-    })
-    setEditingId(p.id)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
-  const input = (label, field, type='text', opts={}) => (
-    <div style={{ marginBottom: 16 }}>
-      <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#555', marginBottom: 4 }}>
-        {label}
-      </label>
-      <input
-        type={type}
-        value={form[field]}
-        onChange={e => set(field, e.target.value)}
-        style={{
-          width: '100%', padding: '9px 12px', borderRadius: 8,
-          border: '1.5px solid #eee', fontSize: 14, outline: 'none',
-          boxSizing: 'border-box'
-        }}
-        {...opts}
-      />
-    </div>
+  const filtered = patterns.filter(p =>
+    p.title.toLowerCase().includes(search.toLowerCase()) ||
+    p.author.toLowerCase().includes(search.toLowerCase()) ||
+    (p.category || '').toLowerCase().includes(search.toLowerCase())
   )
 
-  const select = (label, field, options) => (
-    <div style={{ marginBottom: 16 }}>
-      <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#555', marginBottom: 4 }}>
-        {label}
-      </label>
-      <select
-        value={form[field]}
-        onChange={e => set(field, e.target.value)}
-        style={{
-          width: '100%', padding: '9px 12px', borderRadius: 8,
-          border: '1.5px solid #eee', fontSize: 14, outline: 'none',
-          background: 'white', boxSizing: 'border-box'
-        }}
-      >
-        {options.map(o => <option key={o} value={o}>{o}</option>)}
-      </select>
-    </div>
+  const chip = (label, active, onClick) => (
+    <button onClick={onClick} style={{
+      padding: '6px 16px', borderRadius: 20,
+      border: active ? '1.5px solid #3C3489' : '1px solid #ddd',
+      background: active ? '#3C3489' : 'white',
+      color: active ? 'white' : '#555',
+      cursor: 'pointer', fontSize: 13,
+      fontWeight: active ? 600 : 400, whiteSpace: 'nowrap'
+    }}>{label}</button>
   )
+
+  const levelColor = (d) => {
+    if (d === 'Beginner') return { background: '#e8f5e9', color: '#2e7d32' }
+    if (d === 'Intermediate') return { background: '#fff8e1', color: '#f57f17' }
+    if (d === 'Advanced') return { background: '#fce4ec', color: '#c62828' }
+    return {}
+  }
 
   return (
     <div style={{ minHeight: '100vh', background: '#faf9f7', fontFamily: 'system-ui, sans-serif' }}>
 
-      <div style={{ background: '#3C3489', padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div>
-          <h1 style={{ color: 'white', fontSize: 20, fontWeight: 700, margin: 0 }}>🧶 Loopbase Admin</h1>
-          <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 12, margin: 0 }}>Pattern management</p>
+      <div style={{
+        background: 'white', borderBottom: '1px solid #eee',
+        padding: '20px 24px 0', position: 'sticky', top: 0, zIndex: 10
+      }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 16 }}>
+            <div>
+              <h1 style={{ fontSize: 24, fontWeight: 700, color: '#3C3489', margin: 0 }}>🧶 Loopbase</h1>
+              <p style={{ fontSize: 12, color: '#999', margin: 0 }}>Always free, forever</p>
+            </div>
+            <input type="text" placeholder="Search patterns, creators, categories..."
+              value={search} onChange={e => setSearch(e.target.value)}
+              style={{
+                flex: 1, padding: '10px 16px', borderRadius: 24,
+                border: '1.5px solid #eee', fontSize: 14, outline: 'none', background: '#faf9f7'
+              }} />
+          </div>
+          <div style={{ display: 'flex', gap: 8, paddingBottom: 16, overflowX: 'auto' }}>
+            {chip('All levels', !difficulty, () => setDifficulty(null))}
+            {chip('Beginner', difficulty === 'Beginner', () => setDifficulty(difficulty === 'Beginner' ? null : 'Beginner'))}
+            {chip('Intermediate', difficulty === 'Intermediate', () => setDifficulty(difficulty === 'Intermediate' ? null : 'Intermediate'))}
+            {chip('Advanced', difficulty === 'Advanced', () => setDifficulty(difficulty === 'Advanced' ? null : 'Advanced'))}
+            <div style={{ width: 1, background: '#eee', margin: '0 4px' }} />
+            {chip('Any time', !time, () => setTime(null))}
+            {chip('Under 2h', time === 'Under 2h', () => setTime(time === 'Under 2h' ? null : 'Under 2h'))}
+            {chip('2-5h', time === '2-5h', () => setTime(time === '2-5h' ? null : '2-5h'))}
+            {chip('5h+', time === '5h+', () => setTime(time === '5h+' ? null : '5h+'))}
+            <div style={{ width: 1, background: '#eee', margin: '0 4px' }} />
+            {chip('Any format', !format, () => setFormat(null))}
+            {chip('Pattern', format === 'pattern', () => setFormat(format === 'pattern' ? null : 'pattern'))}
+            {chip('Video', format === 'video', () => setFormat(format === 'video' ? null : 'video'))}
+            {chip('Both', format === 'both', () => setFormat(format === 'both' ? null : 'both'))}
+          </div>
         </div>
-        <a href="/" style={{ color: 'white', fontSize: 13, textDecoration: 'none', background: 'rgba(255,255,255,0.2)', padding: '6px 14px', borderRadius: 20 }}>
-          View site →
-        </a>
       </div>
 
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: 24, display: 'grid', gridTemplateColumns: '400px 1fr', gap: 24 }}>
+      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '24px' }}>
+        <p style={{ fontSize: 13, color: '#999', marginBottom: 20 }}>{filtered.length} free patterns</p>
 
-        <div style={{ background: 'white', borderRadius: 16, padding: 24, border: '1px solid #eee', alignSelf: 'start' }}>
-          <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20, color: '#1a1a1a' }}>
-            {editingId ? 'Edit pattern' : 'Add new pattern'}
-          </h2>
-
-          {input('Title *', 'title', 'text', { placeholder: 'e.g. Chunky Beanie Hat' })}
-          {input('Author', 'author', 'text', { placeholder: 'e.g. CozyStitches' })}
-          {select('Difficulty', 'difficulty', ['Beginner', 'Intermediate', 'Advanced'])}
-          {select('Time estimate', 'time_estimate', ['Under 2h', '2-5h', '5h+'])}
-          {select('Category', 'category', ['Accessories', 'Home', 'Toys', 'Garments', 'Baby', 'Other'])}
-          {select('Format', 'format', ['both', 'video', 'pattern'])}
-          {input('Tutorial URL *', 'tutorial_url', 'text', { placeholder: 'https://...' })}
-
-          <div style={{ marginBottom: 16 }}>
-            <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#555', marginBottom: 4 }}>
-              Image
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={e => e.target.files[0] && uploadImage(e.target.files[0])}
-              style={{ marginBottom: 8, fontSize: 13 }}
-            />
-            <input
-              type="text"
-              placeholder="Or paste image URL directly"
-              value={form.image_url}
-              onChange={e => set('image_url', e.target.value)}
-              style={{
-                width: '100%', padding: '9px 12px', borderRadius: 8,
-                border: '1.5px solid #eee', fontSize: 14, outline: 'none',
-                boxSizing: 'border-box'
-              }}
-            />
-            {imageUploading && <p style={{ fontSize: 12, color: '#999', margin: '4px 0 0' }}>Uploading image...</p>}
-            {form.image_url && (
-              <img src={form.image_url} alt="preview"
-                style={{ width: '100%', height: 120, objectFit: 'cover', borderRadius: 8, marginTop: 8 }} />
-            )}
-          </div>
-
-          {input('Description', 'description', 'text', { placeholder: 'One sentence about this pattern' })}
-          {input('Yarn affiliate link', 'yarn_affiliate', 'text', { placeholder: 'https://...' })}
-          {input('Hook affiliate link', 'hook_affiliate', 'text', { placeholder: 'https://...' })}
-
-          <div style={{ marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <input
-              type="checkbox"
-              checked={form.is_published}
-              onChange={e => set('is_published', e.target.checked)}
-              id="published"
-            />
-            <label htmlFor="published" style={{ fontSize: 14, color: '#555' }}>Published (visible on site)</label>
-          </div>
-
-          {message && (
-            <div style={{
-              padding: '10px 14px', borderRadius: 8, marginBottom: 16, fontSize: 13,
-              background: message.includes('Error') ? '#fce4ec' : '#e8f5e9',
-              color: message.includes('Error') ? '#c62828' : '#2e7d32'
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 20 }}>
+          {filtered.map(p => (
+            <div key={p.id} style={{
+              background: 'white', borderRadius: 16, overflow: 'hidden',
+              border: '1px solid #eee', cursor: 'pointer'
             }}>
-              {message}
+              <div style={{ position: 'relative', height: 200, background: '#f0ede8' }}>
+                {p.image_url
+                  ? <img src={p.image_url} alt={p.title}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                  : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 48 }}>🧶</div>
+                }
+                <span style={{
+                  position: 'absolute', top: 10, right: 10,
+                  background: 'white', borderRadius: 20, padding: '3px 10px',
+                  fontSize: 11, fontWeight: 600, ...levelColor(p.difficulty)
+                }}>{p.difficulty}</span>
+              </div>
+
+              <div style={{ padding: '14px 16px' }}>
+                <div style={{ fontWeight: 700, fontSize: 15, color: '#1a1a1a', marginBottom: 3 }}>{p.title}</div>
+                <div style={{ fontSize: 12, color: '#999', marginBottom: 10 }}>by {p.author}</div>
+                <div style={{ display: 'flex', gap: 6, marginBottom: 14, flexWrap: 'wrap' }}>
+                  <span style={{ background: '#f0ede8', color: '#666', padding: '3px 8px', borderRadius: 8, fontSize: 11 }}>{p.category}</span>
+                  <span style={{ background: '#f0ede8', color: '#666', padding: '3px 8px', borderRadius: 8, fontSize: 11 }}>{p.time_estimate}</span>
+                  <span style={{ background: '#f0ede8', color: '#666', padding: '3px 8px', borderRadius: 8, fontSize: 11 }}>
+                    {p.format === 'both' ? 'Video + Pattern' : p.format === 'video' ? 'Video' : 'Pattern'}
+                  </span>
+                </div>
+                <button onClick={() => setSelected(p)} style={{
+                  width: '100%', padding: '9px', borderRadius: 10,
+                  background: '#3C3489', color: 'white', border: 'none',
+                  fontSize: 13, fontWeight: 600, cursor: 'pointer'
+                }}>Quick view</button>
+              </div>
             </div>
-          )}
-
-          <button onClick={handleSubmit} disabled={loading}
-            style={{
-              width: '100%', padding: '12px', borderRadius: 10, border: 'none',
-              background: '#3C3489', color: 'white', fontSize: 15, fontWeight: 700,
-              cursor: 'pointer', marginBottom: 8
-            }}>
-            {loading ? 'Saving...' : editingId ? 'Update pattern' : 'Add pattern'}
-          </button>
-
-          {editingId && (
-            <button onClick={() => { setForm(empty); setEditingId(null) }}
-              style={{
-                width: '100%', padding: '10px', borderRadius: 10,
-                border: '1.5px solid #eee', background: 'white',
-                color: '#555', fontSize: 14, cursor: 'pointer'
-              }}>
-              Cancel edit
-            </button>
-          )}
+          ))}
         </div>
 
-        <div>
-          <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16, color: '#1a1a1a' }}>
-            All patterns ({patterns.length})
-          </h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {patterns.map(p => (
-              <div key={p.id} style={{
-                background: 'white', borderRadius: 12, padding: '14px 16px',
-                border: '1px solid #eee', display: 'flex', alignItems: 'center', gap: 12
-              }}>
-                {p.image_url && (
-                  <img src={p.image_url} alt={p.title}
-                    style={{ width: 60, height: 60, objectFit: 'cover', borderRadius: 8, flexShrink: 0 }} />
-                )}
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 600, fontSize: 14, color: '#1a1a1a' }}>{p.title}</div>
-                  <div style={{ fontSize: 12, color: '#999' }}>by {p.author} · {p.difficulty} · {p.time_estimate}</div>
-                  <div style={{ fontSize: 11, marginTop: 2 }}>
-                    <span style={{
-                      background: p.is_published ? '#e8f5e9' : '#fff8e1',
-                      color: p.is_published ? '#2e7d32' : '#f57f17',
-                      padding: '2px 6px', borderRadius: 6
-                    }}>
-                      {p.is_published ? 'Published' : 'Draft'}
-                    </span>
+        {filtered.length === 0 && (
+          <div style={{ textAlign: 'center', padding: '80px 0' }}>
+            <div style={{ fontSize: 48, marginBottom: 16 }}>🧶</div>
+            <p style={{ color: '#999', fontSize: 16 }}>No patterns found — try a different filter</p>
+          </div>
+        )}
+      </div>
+
+      {selected && (
+        <div
+          onClick={() => setSelected(null)}
+          style={{
+            position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)',
+            zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center',
+            padding: 24
+          }}>
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{
+              background: 'white', borderRadius: 20, maxWidth: 580, width: '100%',
+              maxHeight: '90vh', overflowY: 'auto', position: 'relative'
+            }}>
+
+            <button onClick={() => setSelected(null)} style={{
+              position: 'absolute', top: 12, right: 12, width: 32, height: 32,
+              borderRadius: '50%', border: 'none', background: 'rgba(0,0,0,0.1)',
+              cursor: 'pointer', fontSize: 16, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              zIndex: 1
+            }}>✕</button>
+
+            {selected.image_url && (
+              <img src={selected.image_url} alt={selected.title}
+                style={{ width: '100%', height: 240, objectFit: 'cover', borderRadius: '20px 20px 0 0', display: 'block' }} />
+            )}
+
+            <div style={{ padding: 24 }}>
+
+              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 10 }}>
+                <span style={{ padding: '3px 10px', borderRadius: 10, fontSize: 12, fontWeight: 600, ...levelColor(selected.difficulty) }}>
+                  {selected.difficulty}
+                </span>
+                <span style={{ background: '#f0ede8', color: '#666', padding: '3px 10px', borderRadius: 10, fontSize: 12 }}>
+                  {selected.time_estimate}
+                </span>
+                <span style={{ background: '#f0ede8', color: '#666', padding: '3px 10px', borderRadius: 10, fontSize: 12 }}>
+                  {selected.category}
+                </span>
+                <span style={{ background: '#f0ede8', color: '#666', padding: '3px 10px', borderRadius: 10, fontSize: 12 }}>
+                  {selected.format === 'both' ? 'Video + Pattern' : selected.format === 'video' ? 'Video' : 'Pattern'}
+                </span>
+              </div>
+
+              <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1a1a1a', marginBottom: 4 }}>{selected.title}</h2>
+              <p style={{ fontSize: 13, color: '#999', marginBottom: 12 }}>by {selected.author}</p>
+
+              {selected.description && (
+                <p style={{ fontSize: 14, color: '#555', lineHeight: 1.7, marginBottom: 16 }}>{selected.description}</p>
+              )}
+              <a 
+  href={`/patterns/${selected.id}/go`}
+  rel="noopener noreferrer"
+  style={{
+    display: 'block',
+    textAlign: 'center',
+    background: '#3C3489',
+    color: 'white',
+    padding: '12px',
+    borderRadius: 10,
+    fontSize: 15,
+    fontWeight: 700,
+    textDecoration: 'none',
+    marginBottom: 16
+  }}
+>
+  View free pattern →
+</a>
+
+ target="_blank" rel="noopener noreferrer"
+                style={{
+                  display: 'block', textAlign: 'center', background: '#3C3489',
+                  color: 'white', padding: '12px', borderRadius: 10,
+                  fontSize: 15, fontWeight: 700, textDecoration: 'none', marginBottom: 16
+                }}>
+                View free pattern →
+              </a>
+              {(selected.yarn_affiliate || selected.hook_affiliate) && (
+                <div style={{ borderTop: '1px solid #eee', paddingTop: 16 }}>
+                  <p style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', marginBottom: 4 }}>
+                    🛍️ Shop supplies for this pattern
+                  </p>
+                  <p style={{ fontSize: 11, color: '#aaa', marginBottom: 12 }}>
+                    Affiliate links — we earn a small commission at no extra cost to you. This keeps Loopbase free.
+                  </p>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    {selected.yarn_affiliate && (
+                      <a href={selected.yarn_affiliate} target="_blank" rel="noopener noreferrer"
+                        style={{
+                          display: 'flex', alignItems: 'center', gap: 10,
+                          padding: '10px 14px', borderRadius: 10, border: '1px solid #eee',
+                          textDecoration: 'none', background: '#faf9f7'
+                        }}>
+                        <span style={{ fontSize: 20 }}>🧶</span>
+                        <div>
+                          <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a' }}>Shop yarn for this pattern</div>
+                          <div style={{ fontSize: 11, color: '#999' }}>Find the perfect yarn on Hobbii</div>
+                        </div>
+                        <span style={{ marginLeft: 'auto', color: '#3C3489', fontSize: 13, fontWeight: 600 }}>Shop →</span>
+                      </a>
+                    )}
+                    {selected.hook_affiliate && (
+                      <a href={selected.hook_affiliate} target="_blank" rel="noopener noreferrer"
+                        style={{
+                          display: 'flex', alignItems: 'center', gap: 10,
+                          padding: '10px 14px', borderRadius: 10, border: '1px solid #eee',
+                          textDecoration: 'none', background: '#faf9f7'
+                        }}>
+                        <span style={{ fontSize: 20 }}>🪡</span>
+                        <div>
+                          <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a' }}>Shop hooks for this pattern</div>
+                          <div style={{ fontSize: 11, color: '#999' }}>Get the right hook size on Amazon</div>
+                        </div>
+                        <span style={{ marginLeft: 'auto', color: '#3C3489', fontSize: 13, fontWeight: 600 }}>Shop →</span>
+                      </a>
+                    )}
                   </div>
                 </div>
-                <div style={{ display: 'flex', gap: 8 }}>
-                  <button onClick={() => handleEdit(p)}
-                    style={{
-                      padding: '6px 14px', borderRadius: 8, border: '1.5px solid #3C3489',
-                      background: 'white', color: '#3C3489', fontSize: 13, cursor: 'pointer'
-                    }}>
-                    Edit
-                  </button>
-                  <button onClick={() => handleDelete(p.id)}
-                    style={{
-                      padding: '6px 14px', borderRadius: 8, border: '1.5px solid #ffcdd2',
-                      background: 'white', color: '#c62828', fontSize: 13, cursor: 'pointer'
-                    }}>
-                    Delete
-                  </button>
-                </div>
-              </div>
-            ))}
+              )}
+
+            </div>
           </div>
         </div>
+      )}
 
-      </div>
     </div>
   )
 }

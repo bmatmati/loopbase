@@ -8,16 +8,12 @@ export default function Home() {
   const [time, setTime] = useState(null)
   const [format, setFormat] = useState(null)
   const [search, setSearch] = useState('')
+  const [selected, setSelected] = useState(null)
 
-  useEffect(() => {
-    fetchPatterns()
-  }, [difficulty, time, format])
+  useEffect(() => { fetchPatterns() }, [difficulty, time, format])
 
   async function fetchPatterns() {
-    let query = supabase
-      .from('patterns')
-      .select('*')
-      .eq('is_published', true)
+    let query = supabase.from('patterns').select('*').eq('is_published', true)
     if (difficulty) query = query.eq('difficulty', difficulty)
     if (time) query = query.eq('time_estimate', time)
     if (format) query = query.eq('format', format)
@@ -28,23 +24,18 @@ export default function Home() {
   const filtered = patterns.filter(p =>
     p.title.toLowerCase().includes(search.toLowerCase()) ||
     p.author.toLowerCase().includes(search.toLowerCase()) ||
-    p.category.toLowerCase().includes(search.toLowerCase())
+    (p.category || '').toLowerCase().includes(search.toLowerCase())
   )
 
   const chip = (label, active, onClick) => (
     <button onClick={onClick} style={{
-      padding: '6px 16px',
-      borderRadius: 20,
+      padding: '6px 16px', borderRadius: 20,
       border: active ? '1.5px solid #3C3489' : '1px solid #ddd',
       background: active ? '#3C3489' : 'white',
       color: active ? 'white' : '#555',
-      cursor: 'pointer',
-      fontSize: 13,
-      fontWeight: active ? 600 : 400,
-      whiteSpace: 'nowrap'
-    }}>
-      {label}
-    </button>
+      cursor: 'pointer', fontSize: 13,
+      fontWeight: active ? 600 : 400, whiteSpace: 'nowrap'
+    }}>{label}</button>
   )
 
   const levelColor = (d) => {
@@ -56,43 +47,17 @@ export default function Home() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#faf9f7', fontFamily: 'system-ui, sans-serif' }}>
-
-      <div style={{
-        background: 'white',
-        borderBottom: '1px solid #eee',
-        padding: '20px 24px 0',
-        position: 'sticky',
-        top: 0,
-        zIndex: 10
-      }}>
+      <div style={{ background: 'white', borderBottom: '1px solid #eee', padding: '20px 24px 0', position: 'sticky', top: 0, zIndex: 10 }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-
           <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 16 }}>
             <div>
-              <h1 style={{ fontSize: 24, fontWeight: 700, color: '#3C3489', margin: 0 }}>
-                🧶 Loopbase
-              </h1>
-              <p style={{ fontSize: 12, color: '#999', margin: 0 }}>
-                Always free, forever
-              </p>
+              <h1 style={{ fontSize: 24, fontWeight: 700, color: '#3C3489', margin: 0 }}>Loopbase</h1>
+              <p style={{ fontSize: 12, color: '#999', margin: 0 }}>Always free, forever</p>
             </div>
-            <input
-              type="text"
-              placeholder="Search patterns, creators, categories..."
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              style={{
-                flex: 1,
-                padding: '10px 16px',
-                borderRadius: 24,
-                border: '1.5px solid #eee',
-                fontSize: 14,
-                outline: 'none',
-                background: '#faf9f7'
-              }}
-            />
+            <input type="text" placeholder="Search patterns, creators, categories..."
+              value={search} onChange={e => setSearch(e.target.value)}
+              style={{ flex: 1, padding: '10px 16px', borderRadius: 24, border: '1.5px solid #eee', fontSize: 14, outline: 'none', background: '#faf9f7' }} />
           </div>
-
           <div style={{ display: 'flex', gap: 8, paddingBottom: 16, overflowX: 'auto' }}>
             {chip('All levels', !difficulty, () => setDifficulty(null))}
             {chip('Beginner', difficulty === 'Beginner', () => setDifficulty(difficulty === 'Beginner' ? null : 'Beginner'))}
@@ -109,91 +74,106 @@ export default function Home() {
             {chip('Video', format === 'video', () => setFormat(format === 'video' ? null : 'video'))}
             {chip('Both', format === 'both', () => setFormat(format === 'both' ? null : 'both'))}
           </div>
-
         </div>
       </div>
-
-      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '24px 24px' }}>
-
-        <p style={{ fontSize: 13, color: '#999', marginBottom: 20 }}>
-          {filtered.length} free patterns
-        </p>
-
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
-          gap: 20
-        }}>
+      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '24px' }}>
+        <p style={{ fontSize: 13, color: '#999', marginBottom: 20 }}>{filtered.length} free patterns</p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 20 }}>
           {filtered.map(p => (
-            <div key={p.id} style={{
-              background: 'white',
-              borderRadius: 16,
-              overflow: 'hidden',
-              border: '1px solid #eee',
-              transition: 'box-shadow 0.2s',
-            }}>
+            <div key={p.id} style={{ background: 'white', borderRadius: 16, overflow: 'hidden', border: '1px solid #eee' }}>
               <div style={{ position: 'relative', height: 200, background: '#f0ede8' }}>
                 {p.image_url
-                  ? <img src={p.image_url} alt={p.title}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-                  : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 48 }}>🧶</div>
+                  ? <img src={p.image_url} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                  : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 48 }}>yarn</div>
                 }
-                <span style={{
-                  position: 'absolute', top: 10, right: 10,
-                  background: 'white', borderRadius: 20, padding: '3px 10px',
-                  fontSize: 11, fontWeight: 600, ...levelColor(p.difficulty)
-                }}>
-                  {p.difficulty}
-                </span>
+                <span style={{ position: 'absolute', top: 10, right: 10, background: 'white', borderRadius: 20, padding: '3px 10px', fontSize: 11, fontWeight: 600, ...levelColor(p.difficulty) }}>{p.difficulty}</span>
               </div>
-
               <div style={{ padding: '14px 16px' }}>
-                <div style={{ fontWeight: 700, fontSize: 15, color: '#1a1a1a', marginBottom: 3 }}>
-                  {p.title}
-                </div>
-                <div style={{ fontSize: 12, color: '#999', marginBottom: 10 }}>
-                  by {p.author}
-                </div>
-
+                <div style={{ fontWeight: 700, fontSize: 15, color: '#1a1a1a', marginBottom: 3 }}>{p.title}</div>
+                <div style={{ fontSize: 12, color: '#999', marginBottom: 10 }}>by {p.author}</div>
                 <div style={{ display: 'flex', gap: 6, marginBottom: 14, flexWrap: 'wrap' }}>
-                  <span style={{ background: '#f0ede8', color: '#666', padding: '3px 8px', borderRadius: 8, fontSize: 11 }}>
-                    {p.category}
-                  </span>
-                  <span style={{ background: '#f0ede8', color: '#666', padding: '3px 8px', borderRadius: 8, fontSize: 11 }}>
-                    {p.time_estimate}
-                  </span>
+                  <span style={{ background: '#f0ede8', color: '#666', padding: '3px 8px', borderRadius: 8, fontSize: 11 }}>{p.category}</span>
+                  <span style={{ background: '#f0ede8', color: '#666', padding: '3px 8px', borderRadius: 8, fontSize: 11 }}>{p.time_estimate}</span>
                   <span style={{ background: '#f0ede8', color: '#666', padding: '3px 8px', borderRadius: 8, fontSize: 11 }}>
                     {p.format === 'both' ? 'Video + Pattern' : p.format === 'video' ? 'Video' : 'Pattern'}
                   </span>
                 </div>
-
-                <a href={p.tutorial_url} target="_blank" rel="noopener noreferrer"
-                  style={{
-                    display: 'block',
-                    textAlign: 'center',
-                    background: '#3C3489',
-                    color: 'white',
-                    padding: '9px',
-                    borderRadius: 10,
-                    fontSize: 13,
-                    fontWeight: 600,
-                    textDecoration: 'none'
-                  }}>
-                  View free pattern →
-                </a>
+                <button onClick={() => setSelected(p)} style={{ width: '100%', padding: '9px', borderRadius: 10, background: '#3C3489', color: 'white', border: 'none', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Quick view</button>
               </div>
             </div>
           ))}
         </div>
-
         {filtered.length === 0 && (
           <div style={{ textAlign: 'center', padding: '80px 0' }}>
-            <div style={{ fontSize: 48, marginBottom: 16 }}>🧶</div>
-            <p style={{ color: '#999', fontSize: 16 }}>No patterns found — try a different filter</p>
+            <p style={{ color: '#999', fontSize: 16 }}>No patterns found</p>
           </div>
         )}
-
       </div>
+      {selected && (
+        <div onClick={() => setSelected(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: 'white', borderRadius: 20, maxWidth: 580, width: '100%', maxHeight: '90vh', overflowY: 'auto', position: 'relative' }}>
+            <button onClick={() => setSelected(null)} style={{ position: 'absolute', top: 12, right: 12, width: 32, height: 32, borderRadius: '50%', border: 'none', background: 'rgba(0,0,0,0.1)', cursor: 'pointer', fontSize: 14, zIndex: 1 }}>X</button>
+            {selected.image_url && (
+              <img src={selected.image_url} alt={selected.title} style={{ width: '100%', height: 240, objectFit: 'cover', borderRadius: '20px 20px 0 0', display: 'block' }} />
+            )}
+            <div style={{ padding: 24 }}>
+              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 10 }}>
+                <span style={{ padding: '3px 10px', borderRadius: 10, fontSize: 12, fontWeight: 600, ...levelColor(selected.difficulty) }}>{selected.difficulty}</span>
+                <span style={{ background: '#f0ede8', color: '#666', padding: '3px 10px', borderRadius: 10, fontSize: 12 }}>{selected.time_estimate}</span>
+                <span style={{ background: '#f0ede8', color: '#666', padding: '3px 10px', borderRadius: 10, fontSize: 12 }}>{selected.category}</span>
+              </div>
+              <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1a1a1a', marginBottom: 4 }}>{selected.title}</h2>
+              <p style={{ fontSize: 13, color: '#999', marginBottom: 12 }}>by {selected.author}</p>
+              {selected.description && (
+                <p style={{ fontSize: 14, color: '#555', lineHeight: 1.7, marginBottom: 16 }}>{selected.description}</p>
+              )}
+              <a href={selected.tutorial_url} target="_blank" rel="noopener noreferrer" style={{ display: 'block', textAlign: 'center', background: '#3C3489', color: 'white', padding: '12px', borderRadius: 10, fontSize: 15, fontWeight: 700, textDecoration: 'none', marginBottom: 16 }}>
+                View free pattern
+              </a>
+              {(selected.yarn_affiliate || selected.hook_affiliate) && (
+                <div style={{ borderTop: '1px solid #eee', paddingTop: 16 }}>
+                  <p style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', marginBottom: 4 }}>Shop supplies</p>
+                  <p style={{ fontSize: 11, color: '#aaa', marginBottom: 12 }}>Affiliate links - small commission at no extra cost to you. Keeps Loopbase free.</p>
+                  {selected.yarn_affiliate && (
+                    <a href={selected.yarn_affiliate} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', display: 'block', marginBottom: 8 }}>
+                      <div style={{ borderRadius: 10, border: '1px solid #eee', overflow: 'hidden' }}>
+                        <div style={{ background: '#f0ede8', padding: '8px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                          <span style={{ fontSize: 12, fontWeight: 600, color: '#666' }}>Yarn</span>
+                          <span style={{ fontSize: 11, background: '#3C3489', color: 'white', padding: '2px 8px', borderRadius: 10 }}>Hobbii</span>
+                        </div>
+                        <div style={{ padding: '10px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                          <div>
+                            <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a' }}>{selected.yarn_name || 'Recommended yarn'}</div>
+                            <div style={{ fontSize: 12, color: '#999' }}>{selected.yarn_price || 'Check price on Hobbii'}</div>
+                          </div>
+                          <span style={{ color: '#3C3489', fontWeight: 700 }}>Shop</span>
+                        </div>
+                      </div>
+                    </a>
+                  )}
+                  {selected.hook_affiliate && (
+                    <a href={selected.hook_affiliate} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', display: 'block' }}>
+                      <div style={{ borderRadius: 10, border: '1px solid #eee', overflow: 'hidden' }}>
+                        <div style={{ background: '#f0ede8', padding: '8px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                          <span style={{ fontSize: 12, fontWeight: 600, color: '#666' }}>Hook</span>
+                          <span style={{ fontSize: 11, background: '#3C3489', color: 'white', padding: '2px 8px', borderRadius: 10 }}>Amazon</span>
+                        </div>
+                        <div style={{ padding: '10px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                          <div>
+                            <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a' }}>{selected.hook_name || 'Recommended hook'}</div>
+                            <div style={{ fontSize: 12, color: '#999' }}>{selected.hook_price || 'Check price on Amazon'}</div>
+                          </div>
+                          <span style={{ color: '#3C3489', fontWeight: 700 }}>Shop</span>
+                        </div>
+                      </div>
+                    </a>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
