@@ -208,7 +208,8 @@ export default function Home() {
                   display: 'block', textAlign: 'center', background: '#3C3489',
                   color: 'white', padding: '12px', borderRadius: 10,
                   fontSize: 15, fontWeight: 700, textDecoration: 'none', marginBottom: 16
-                }}>
+                }}
+                >
                 View free pattern →
               </a>
               {(selected.yarn_affiliate || selected.hook_affiliate) && (
