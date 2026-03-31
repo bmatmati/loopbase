@@ -23,13 +23,14 @@ export default function Home() {
   const [user, setUser] = useState(null)
   const [saved, setSaved] = useState([])
 
+  useEffect(() => { fetchPatterns() }, [difficulty, time, format])
+
   useEffect(() => {
-    fetchPatterns()
     supabase.auth.getUser().then(({ data }) => {
       setUser(data.user)
       if (data.user) fetchSaved(data.user.id)
     })
-  }, [difficulty, time, format])
+  }, [])
 
   async function fetchPatterns() {
     let query = supabase.from('patterns').select('*').eq('is_published', true)
