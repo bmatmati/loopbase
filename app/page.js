@@ -20,8 +20,16 @@ export default function Home() {
   const [format, setFormat] = useState(null)
   const [search, setSearch] = useState('')
   const [selected, setSelected] = useState(null)
+  const [user, setUser] = useState(null)
+  const [saved, setSaved] = useState([])
 
-  useEffect(() => { fetchPatterns() }, [difficulty, time, format])
+  useEffect(() => {
+    fetchPatterns()
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user)
+      if (data.user) fetchSaved(data.user.id)
+    })
+  }, [difficulty, time, format])
 
   async function fetchPatterns() {
     let query = supabase.from('patterns').select('*').eq('is_published', true)
@@ -30,6 +38,35 @@ export default function Home() {
     if (format) query = query.eq('format', format)
     const { data } = await query
     setPatterns(data || [])
+  }
+
+  async function fetchSaved(userId) {
+    const { data } = await supabase
+      .from('saved_patterns')
+      .select('pattern_id')
+      .eq('user_id', userId)
+    setSaved((data || []).map(s => s.pattern_id))
+  }
+
+  async function toggleSave(p) {
+    if (!user) {
+      window.location.href = '/login'
+      return
+    }
+    const isSaved = saved.includes(p.id)
+    if (isSaved) {
+      await supabase.from('saved_patterns').delete().eq('user_id', user.id).eq('pattern_id', p.id)
+      setSaved(saved.filter(id => id !== p.id))
+    } else {
+      await supabase.from('saved_patterns').insert([{ user_id: user.id, pattern_id: p.id }])
+      setSaved([...saved, p.id])
+    }
+  }
+
+  async function handleLogout() {
+    await supabase.auth.signOut()
+    setUser(null)
+    setSaved([])
   }
 
   const filtered = patterns.filter(p =>
@@ -68,6 +105,16 @@ export default function Home() {
             <input type="text" placeholder="Search patterns, creators, categories..."
               value={search} onChange={e => setSearch(e.target.value)}
               style={{ flex: 1, padding: '10px 16px', borderRadius: 24, border: '1.5px solid #eee', fontSize: 14, outline: 'none', background: '#faf9f7' }} />
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+              {user ? (
+                <>
+                  <a href="/saved" style={{ fontSize: 13, color: '#3C3489', fontWeight: 600, textDecoration: 'none' }}>My patterns</a>
+                  <button onClick={handleLogout} style={{ fontSize: 13, color: '#999', background: 'none', border: 'none', cursor: 'pointer' }}>Log out</button>
+                </>
+              ) : (
+                <a href="/login" style={{ padding: '8px 16px', borderRadius: 20, background: '#3C3489', color: 'white', fontSize: 13, fontWeight: 600, textDecoration: 'none' }}>Sign in</a>
+              )}
+            </div>
           </div>
           <div style={{ display: 'flex', gap: 8, paddingBottom: 16, overflowX: 'auto' }}>
             {chip('All levels', !difficulty, () => setDifficulty(null))}
@@ -99,6 +146,9 @@ export default function Home() {
                   : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 48 }}>yarn</div>
                 }
                 <span style={{ position: 'absolute', top: 10, right: 10, background: 'white', borderRadius: 20, padding: '3px 10px', fontSize: 11, fontWeight: 600, ...levelColor(p.difficulty) }}>{p.difficulty}</span>
+                <button onClick={() => toggleSave(p)} style={{ position: 'absolute', top: 10, left: 10, width: 32, height: 32, borderRadius: '50%', border: 'none', background: 'white', cursor: 'pointer', fontSize: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 1px 4px rgba(0,0,0,0.1)' }}>
+                  {saved.includes(p.id) ? 'heart' : 'heart'}
+                </button>
               </div>
               <div style={{ padding: '14px 16px' }}>
                 <div style={{ fontWeight: 700, fontSize: 15, color: '#1a1a1a', marginBottom: 3 }}>{p.title}</div>
@@ -150,12 +200,9 @@ export default function Home() {
                   {selected.yarn_affiliate && (
                     <div style={{ borderRadius: 10, border: '1px solid #eee', overflow: 'hidden', marginBottom: 8 }}>
                       <div style={{ background: '#f0ede8', padding: '8px 14px', display: 'flex', alignItems: 'center', gap: 10 }}>
-                        {selected.yarn_image_url && (
-                          <img src={selected.yarn_image_url} alt="Yarn" style={{ width: 40, height: 40, objectFit: 'cover', borderRadius: 6 }} />
-                        )}
                         <div style={{ flex: 1 }}>
                           <div style={{ fontSize: 12, fontWeight: 600, color: '#333' }}>{selected.yarn_name || 'Recommended yarn'}</div>
-                          <div style={{ fontSize: 11, color: '#888' }}>{detectBrand(selected.yarn_affiliate)}{selected.yarn_price ? ' · ' + selected.yarn_price : ''}</div>
+                          <div style={{ fontSize: 11, color: '#888' }}>{detectBrand(selected.yarn_affiliate)}{selected.yarn_price ? ' - ' + selected.yarn_price : ''}</div>
                         </div>
                         <a href={selected.yarn_affiliate} target="_blank" rel="noopener noreferrer" style={{ background: '#3C3489', color: 'white', padding: '6px 12px', borderRadius: 8, fontSize: 12, fontWeight: 600, textDecoration: 'none' }}>Shop yarn</a>
                       </div>
@@ -164,12 +211,9 @@ export default function Home() {
                   {selected.hook_affiliate && (
                     <div style={{ borderRadius: 10, border: '1px solid #eee', overflow: 'hidden' }}>
                       <div style={{ background: '#f0ede8', padding: '8px 14px', display: 'flex', alignItems: 'center', gap: 10 }}>
-                        {selected.hook_image_url && (
-                          <img src={selected.hook_image_url} alt="Hook" style={{ width: 40, height: 40, objectFit: 'cover', borderRadius: 6 }} />
-                        )}
                         <div style={{ flex: 1 }}>
                           <div style={{ fontSize: 12, fontWeight: 600, color: '#333' }}>{selected.hook_name || 'Recommended hook'}</div>
-                          <div style={{ fontSize: 11, color: '#888' }}>{detectBrand(selected.hook_affiliate)}{selected.hook_price ? ' · ' + selected.hook_price : ''}</div>
+                          <div style={{ fontSize: 11, color: '#888' }}>{detectBrand(selected.hook_affiliate)}{selected.hook_price ? ' - ' + selected.hook_price : ''}</div>
                         </div>
                         <a href={selected.hook_affiliate} target="_blank" rel="noopener noreferrer" style={{ background: '#3C3489', color: 'white', padding: '6px 12px', borderRadius: 8, fontSize: 12, fontWeight: 600, textDecoration: 'none' }}>Shop hook</a>
                       </div>
