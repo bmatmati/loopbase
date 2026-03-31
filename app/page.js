@@ -5,7 +5,7 @@ import { supabase } from '../lib/supabase'
 function detectBrand(url) {
   if (!url) return 'Online retailer'
   const l = url.toLowerCase()
-  if (l.includes('amazon.')) return 'Amazon'
+  if (l.includes('amazon.') || l.includes('amzn.to')) return 'Amazon'
   if (l.includes('hobbii.')) return 'Hobbii'
   if (l.includes('etsy.')) return 'Etsy'
   if (l.includes('lovecrafts.')) return 'LoveCrafts'
