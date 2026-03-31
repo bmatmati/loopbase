@@ -147,7 +147,7 @@ export default function Home() {
                 }
                 <span style={{ position: 'absolute', top: 10, right: 10, background: 'white', borderRadius: 20, padding: '3px 10px', fontSize: 11, fontWeight: 600, ...levelColor(p.difficulty) }}>{p.difficulty}</span>
                 <button onClick={() => toggleSave(p)} style={{ position: 'absolute', top: 10, left: 10, width: 32, height: 32, borderRadius: '50%', border: 'none', background: 'white', cursor: 'pointer', fontSize: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 1px 4px rgba(0,0,0,0.1)' }}>
-                  {saved.includes(p.id) ? 'heart' : 'heart'}
+                 {saved.includes(p.id) ? '♥' : '♡'}
                 </button>
               </div>
               <div style={{ padding: '14px 16px' }}>
