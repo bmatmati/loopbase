@@ -2,6 +2,17 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 
+function detectBrand(url) {
+  if (!url) return 'Online retailer'
+  const l = url.toLowerCase()
+  if (l.includes('amazon.')) return 'Amazon'
+  if (l.includes('hobbii.')) return 'Hobbii'
+  if (l.includes('etsy.')) return 'Etsy'
+  if (l.includes('lovecrafts.')) return 'LoveCrafts'
+  if (l.includes('woolwarehouse.')) return 'Wool Warehouse'
+  return 'Online retailer'
+}
+
 export default function Home() {
   const [patterns, setPatterns] = useState([])
   const [difficulty, setDifficulty] = useState(null)
@@ -76,6 +87,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '24px' }}>
         <p style={{ fontSize: 13, color: '#999', marginBottom: 20 }}>{filtered.length} free patterns</p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 20 }}>
@@ -109,6 +121,7 @@ export default function Home() {
           </div>
         )}
       </div>
+
       {selected && (
         <div onClick={() => setSelected(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
           <div onClick={e => e.stopPropagation()} style={{ background: 'white', borderRadius: 20, maxWidth: 580, width: '100%', maxHeight: '90vh', overflowY: 'auto', position: 'relative' }}>
@@ -135,38 +148,32 @@ export default function Home() {
                   <p style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', marginBottom: 4 }}>Shop supplies</p>
                   <p style={{ fontSize: 11, color: '#aaa', marginBottom: 12 }}>Affiliate links - small commission at no extra cost to you. Keeps Loopbase free.</p>
                   {selected.yarn_affiliate && (
-                    <a href={selected.yarn_affiliate} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', display: 'block', marginBottom: 8 }}>
-                      <div style={{ borderRadius: 10, border: '1px solid #eee', overflow: 'hidden' }}>
-                        <div style={{ background: '#f0ede8', padding: '8px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                          <span style={{ fontSize: 12, fontWeight: 600, color: '#666' }}>Yarn</span>
-                          <span style={{ fontSize: 11, background: '#3C3489', color: 'white', padding: '2px 8px', borderRadius: 10 }}>Hobbii</span>
+                    <div style={{ borderRadius: 10, border: '1px solid #eee', overflow: 'hidden', marginBottom: 8 }}>
+                      <div style={{ background: '#f0ede8', padding: '8px 14px', display: 'flex', alignItems: 'center', gap: 10 }}>
+                        {selected.yarn_image_url && (
+                          <img src={selected.yarn_image_url} alt="Yarn" style={{ width: 40, height: 40, objectFit: 'cover', borderRadius: 6 }} />
+                        )}
+                        <div style={{ flex: 1 }}>
+                          <div style={{ fontSize: 12, fontWeight: 600, color: '#333' }}>{selected.yarn_name || 'Recommended yarn'}</div>
+                          <div style={{ fontSize: 11, color: '#888' }}>{detectBrand(selected.yarn_affiliate)}{selected.yarn_price ? ' · ' + selected.yarn_price : ''}</div>
                         </div>
-                        <div style={{ padding: '10px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                          <div>
-                            <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a' }}>{selected.yarn_name || 'Recommended yarn'}</div>
-                            <div style={{ fontSize: 12, color: '#999' }}>{selected.yarn_price || 'Check price on Hobbii'}</div>
-                          </div>
-                          <span style={{ color: '#3C3489', fontWeight: 700 }}>Shop</span>
-                        </div>
+                        <a href={selected.yarn_affiliate} target="_blank" rel="noopener noreferrer" style={{ background: '#3C3489', color: 'white', padding: '6px 12px', borderRadius: 8, fontSize: 12, fontWeight: 600, textDecoration: 'none' }}>Shop yarn</a>
                       </div>
-                    </a>
+                    </div>
                   )}
                   {selected.hook_affiliate && (
-                    <a href={selected.hook_affiliate} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', display: 'block' }}>
-                      <div style={{ borderRadius: 10, border: '1px solid #eee', overflow: 'hidden' }}>
-                        <div style={{ background: '#f0ede8', padding: '8px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                          <span style={{ fontSize: 12, fontWeight: 600, color: '#666' }}>Hook</span>
-                          <span style={{ fontSize: 11, background: '#3C3489', color: 'white', padding: '2px 8px', borderRadius: 10 }}>Amazon</span>
+                    <div style={{ borderRadius: 10, border: '1px solid #eee', overflow: 'hidden' }}>
+                      <div style={{ background: '#f0ede8', padding: '8px 14px', display: 'flex', alignItems: 'center', gap: 10 }}>
+                        {selected.hook_image_url && (
+                          <img src={selected.hook_image_url} alt="Hook" style={{ width: 40, height: 40, objectFit: 'cover', borderRadius: 6 }} />
+                        )}
+                        <div style={{ flex: 1 }}>
+                          <div style={{ fontSize: 12, fontWeight: 600, color: '#333' }}>{selected.hook_name || 'Recommended hook'}</div>
+                          <div style={{ fontSize: 11, color: '#888' }}>{detectBrand(selected.hook_affiliate)}{selected.hook_price ? ' · ' + selected.hook_price : ''}</div>
                         </div>
-                        <div style={{ padding: '10px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                          <div>
-                            <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a' }}>{selected.hook_name || 'Recommended hook'}</div>
-                            <div style={{ fontSize: 12, color: '#999' }}>{selected.hook_price || 'Check price on Amazon'}</div>
-                          </div>
-                          <span style={{ color: '#3C3489', fontWeight: 700 }}>Shop</span>
-                        </div>
+                        <a href={selected.hook_affiliate} target="_blank" rel="noopener noreferrer" style={{ background: '#3C3489', color: 'white', padding: '6px 12px', borderRadius: 8, fontSize: 12, fontWeight: 600, textDecoration: 'none' }}>Shop hook</a>
                       </div>
-                    </a>
+                    </div>
                   )}
                 </div>
               )}
