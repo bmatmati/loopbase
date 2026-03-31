@@ -36,7 +36,15 @@ export default function Home() {
     let query = supabase.from('patterns').select('*').eq('is_published', true)
     if (difficulty) query = query.eq('difficulty', difficulty)
     if (time) query = query.eq('time_estimate', time)
-    if (format) query = query.eq('format', format)
+    if (format) {
+      if (format === 'pattern') {
+        query = query.in('format', ['pattern', 'both'])
+      } else if (format === 'video') {
+        query = query.in('format', ['video', 'both'])
+      } else {
+        query = query.eq('format', format)
+      }
+    }
     const { data } = await query
     setPatterns(data || [])
   }
