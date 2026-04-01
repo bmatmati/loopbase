@@ -108,10 +108,9 @@ export default function Home() {
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 16 }}>
             <div>
-              <img src="/logo.svg" alt="Loopbase" style={{ height: 48, width: 48, borderRadius: 10 }} />
-              <div>
-                <div style={{ fontSize: 22, fontWeight: 700, color: '#3C3489', fontFamily: 'Georgia, serif' }}>Loopbase</div>
-                <div style={{ fontSize: 11, color: '#999' }}>Always free, forever</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <img src="/logo.svg" alt="Loopbase" style={{ height: 40, width: 40, borderRadius: 8 }} />
+                <span style={{ fontSize: 24, fontWeight: 700, color: '#3C3489', fontFamily: 'Georgia, serif', letterSpacing: '-0.5px' }}>Loopbase</span>
               </div>
             </div>
             <input type="text" placeholder="Search patterns, creators, categories..."
