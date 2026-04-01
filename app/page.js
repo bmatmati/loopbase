@@ -144,6 +144,16 @@ export default function Home() {
         </div>
       </div>
 
+      <div style={{ background: '#EEEDFE', borderBottom: '1px solid #d4d0f5', padding: '10px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontSize: 18 }}>🧩</span>
+          <div>
+            <span style={{ fontSize: 13, fontWeight: 600, color: '#3C3489' }}>New! Loopbase browser extension </span>
+            <span style={{ fontSize: 13, color: '#666' }}>— save any crochet pattern from anywhere on the web</span>
+          </div>
+        </div>
+        <a href="/extension" style={{ fontSize: 12, fontWeight: 600, color: '#3C3489', textDecoration: 'none', background: 'white', padding: '6px 14px', borderRadius: 20, border: '1px solid #3C3489', whiteSpace: 'nowrap' }}>Get it free</a>
+      </div>
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '24px' }}>
         <p style={{ fontSize: 13, color: '#999', marginBottom: 20 }}>{filtered.length} free patterns</p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 20 }}>
