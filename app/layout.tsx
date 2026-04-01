@@ -16,8 +16,9 @@ export const metadata = {
   title: 'Loopbase — Free Crochet Patterns',
   description: 'Find hundreds of free crochet tutorials in one place. Filter by difficulty, time and format. Always free, forever.',
   icons: {
-    icon: '/logo.png',
-    apple: '/logo.png',
+  icon: '/favicon.svg',
+  apple: '/favicon.svg',
+} apple: '/logo.png',
   },
   openGraph: {
     title: 'Loopbase — Free Crochet Patterns',
