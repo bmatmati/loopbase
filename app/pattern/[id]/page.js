@@ -20,8 +20,10 @@ export default function PatternDetail() {
   const [user, setUser] = useState(null)
   const [tracker, setTracker] = useState(null)
   const [notes, setNotes] = useState('')
-  const [rowCount, setRowCount] = useState(0)
-  const [stitchCount, setStitchCount] = useState(0)
+  const [currentRow, setCurrentRow] = useState(1)
+  const [stitchesThisRow, setStitchesThisRow] = useState(0)
+  const [totalStitches, setTotalStitches] = useState(0)
+  const [rowLog, setRowLog] = useState([])
   const [progress, setProgress] = useState('not_started')
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
@@ -52,17 +54,45 @@ export default function PatternDetail() {
     if (data) {
       setTracker(data)
       setNotes(data.notes || '')
-      setRowCount(data.row_count || 0)
-      setStitchCount(data.stitch_count || 0)
+      setCurrentRow(data.row_count || 1)
+      setTotalStitches(data.stitch_count || 0)
       setProgress(data.progress || 'not_started')
+      if (data.row_log) {
+        try { setRowLog(JSON.parse(data.row_log)) } catch(e) {}
+      }
       setSaved(true)
     }
+  }
+
+  function completeRow() {
+    const newLog = [...rowLog, { row: currentRow, stitches: stitchesThisRow }]
+    const newTotal = totalStitches + stitchesThisRow
+    setRowLog(newLog)
+    setTotalStitches(newTotal)
+    setCurrentRow(currentRow + 1)
+    setStitchesThisRow(0)
+  }
+
+  function undoLastRow() {
+    if (rowLog.length === 0) return
+    const last = rowLog[rowLog.length - 1]
+    setRowLog(rowLog.slice(0, -1))
+    setTotalStitches(totalStitches - last.stitches)
+    setCurrentRow(currentRow - 1)
   }
 
   async function saveTracker() {
     if (!user) { window.location.href = '/login'; return }
     setSaving(true)
-    const payload = { user_id: user.id, pattern_id: id, notes, row_count: rowCount, stitch_count: stitchCount, progress }
+    const payload = {
+      user_id: user.id,
+      pattern_id: id,
+      notes,
+      row_count: currentRow,
+      stitch_count: totalStitches,
+      progress,
+      row_log: JSON.stringify(rowLog)
+    }
     if (tracker) {
       await supabase.from('saved_patterns').update(payload).eq('id', tracker.id)
     } else {
@@ -71,7 +101,7 @@ export default function PatternDetail() {
     }
     setSaved(true)
     setSaving(false)
-    setMessage('Saved!')
+    setMessage('Progress saved!')
     setTimeout(() => setMessage(''), 2000)
   }
 
@@ -104,30 +134,23 @@ export default function PatternDetail() {
         </div>
       </div>
 
-      <div style={{ maxWidth: 900, margin: '0 auto', padding: '32px 24px', display: 'grid', gridTemplateColumns: '1fr 380px', gap: 24 }}>
+      <div style={{ maxWidth: 960, margin: '0 auto', padding: '32px 24px', display: 'grid', gridTemplateColumns: '1fr 400px', gap: 24 }}>
 
         <div>
           {pattern.image_url && (
             <img src={pattern.image_url} alt={pattern.title}
-              style={{ width: '100%', height: 340, objectFit: 'cover', borderRadius: 16, marginBottom: 20, display: 'block' }} />
+              style={{ width: '100%', height: 320, objectFit: 'cover', borderRadius: 16, marginBottom: 20, display: 'block' }} />
           )}
-
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 12 }}>
             <span style={{ padding: '4px 12px', borderRadius: 20, fontSize: 13, fontWeight: 600, ...levelColor(pattern.difficulty) }}>{pattern.difficulty}</span>
             <span style={{ background: '#f0ede8', color: '#666', padding: '4px 12px', borderRadius: 20, fontSize: 13 }}>{pattern.time_estimate}</span>
             <span style={{ background: '#f0ede8', color: '#666', padding: '4px 12px', borderRadius: 20, fontSize: 13 }}>{pattern.category}</span>
-            <span style={{ background: '#f0ede8', color: '#666', padding: '4px 12px', borderRadius: 20, fontSize: 13 }}>
-              {pattern.format === 'both' ? 'Video + Pattern' : pattern.format === 'video' ? 'Video' : 'Pattern'}
-            </span>
           </div>
-
-          <h1 style={{ fontSize: 28, fontWeight: 700, color: '#1a1a1a', marginBottom: 6 }}>{pattern.title}</h1>
+          <h1 style={{ fontSize: 26, fontWeight: 700, color: '#1a1a1a', marginBottom: 6 }}>{pattern.title}</h1>
           <p style={{ fontSize: 14, color: '#999', marginBottom: 16 }}>by {pattern.author}</p>
-
           {pattern.description && (
             <p style={{ fontSize: 15, color: '#555', lineHeight: 1.8, marginBottom: 20 }}>{pattern.description}</p>
           )}
-
           <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: 24 }}>
             {[
               pattern.hook_size && ['Hook size', pattern.hook_size],
@@ -141,22 +164,20 @@ export default function PatternDetail() {
               </tr>
             ))}
           </table>
-
           <a href={pattern.tutorial_url} target="_blank" rel="noopener noreferrer"
             style={{ display: 'block', textAlign: 'center', background: '#3C3489', color: 'white', padding: '14px', borderRadius: 12, fontSize: 16, fontWeight: 700, textDecoration: 'none', marginBottom: 24 }}>
             View free pattern
           </a>
-
           {(pattern.yarn_affiliate || pattern.hook_affiliate) && (
             <div style={{ background: 'white', borderRadius: 16, padding: 20, border: '1px solid #eee' }}>
               <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 4, color: '#1a1a1a' }}>Shop supplies</h3>
-              <p style={{ fontSize: 12, color: '#aaa', marginBottom: 14 }}>Affiliate links — small commission at no extra cost to you</p>
+              <p style={{ fontSize: 12, color: '#aaa', marginBottom: 14 }}>Affiliate links - small commission at no extra cost to you</p>
               {pattern.yarn_affiliate && (
                 <a href={pattern.yarn_affiliate} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', display: 'block', marginBottom: 10 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px', borderRadius: 10, border: '1px solid #eee', background: '#faf9f7' }}>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a' }}>{pattern.yarn_name || 'Recommended yarn'}</div>
-                      <div style={{ fontSize: 12, color: '#999' }}>{detectBrand(pattern.yarn_affiliate)}{pattern.yarn_price ? ' · ' + pattern.yarn_price : ''}</div>
+                      <div style={{ fontSize: 12, color: '#999' }}>{detectBrand(pattern.yarn_affiliate)}{pattern.yarn_price ? ' - ' + pattern.yarn_price : ''}</div>
                     </div>
                     <span style={{ background: '#3C3489', color: 'white', padding: '6px 12px', borderRadius: 8, fontSize: 12, fontWeight: 600 }}>Shop yarn</span>
                   </div>
@@ -167,7 +188,7 @@ export default function PatternDetail() {
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px', borderRadius: 10, border: '1px solid #eee', background: '#faf9f7' }}>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a' }}>{pattern.hook_name || 'Recommended hook'}</div>
-                      <div style={{ fontSize: 12, color: '#999' }}>{detectBrand(pattern.hook_affiliate)}{pattern.hook_price ? ' · ' + pattern.hook_price : ''}</div>
+                      <div style={{ fontSize: 12, color: '#999' }}>{detectBrand(pattern.hook_affiliate)}{pattern.hook_price ? ' - ' + pattern.hook_price : ''}</div>
                     </div>
                     <span style={{ background: '#3C3489', color: 'white', padding: '6px 12px', borderRadius: 8, fontSize: 12, fontWeight: 600 }}>Shop hook</span>
                   </div>
@@ -180,11 +201,12 @@ export default function PatternDetail() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
           <div style={{ background: 'white', borderRadius: 16, padding: 20, border: '1px solid #eee' }}>
-            <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 14, color: '#1a1a1a' }}>Progress</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 16 }}>
+            <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 14, color: '#1a1a1a' }}>Progress status</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {progressOptions.map(opt => (
                 <button key={opt.value} onClick={() => setProgress(opt.value)} style={{
-                  padding: '10px 14px', borderRadius: 10, border: progress === opt.value ? 'none' : '1px solid #eee',
+                  padding: '10px 14px', borderRadius: 10,
+                  border: progress === opt.value ? '2px solid ' + opt.color : '1px solid #eee',
                   background: progress === opt.value ? opt.bg : 'white',
                   color: progress === opt.value ? opt.color : '#666',
                   fontWeight: progress === opt.value ? 700 : 400,
@@ -199,29 +221,53 @@ export default function PatternDetail() {
           </div>
 
           <div style={{ background: 'white', borderRadius: 16, padding: 20, border: '1px solid #eee' }}>
-            <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 14, color: '#1a1a1a' }}>Row counter</h3>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-              <button onClick={() => setRowCount(Math.max(0, rowCount - 1))} style={{ width: 40, height: 40, borderRadius: '50%', border: '1px solid #eee', background: 'white', fontSize: 20, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>-</button>
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: 40, fontWeight: 700, color: '#3C3489' }}>{rowCount}</div>
-                <div style={{ fontSize: 12, color: '#999' }}>rows</div>
-              </div>
-              <button onClick={() => setRowCount(rowCount + 1)} style={{ width: 40, height: 40, borderRadius: '50%', border: 'none', background: '#3C3489', color: 'white', fontSize: 20, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
-            </div>
-            <button onClick={() => setRowCount(0)} style={{ width: '100%', padding: '7px', borderRadius: 8, border: '1px solid #eee', background: 'white', color: '#999', fontSize: 12, cursor: 'pointer' }}>Reset</button>
-          </div>
+            <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, color: '#1a1a1a' }}>Stitch tracker</h3>
 
-          <div style={{ background: 'white', borderRadius: 16, padding: 20, border: '1px solid #eee' }}>
-            <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 14, color: '#1a1a1a' }}>Stitch counter</h3>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-              <button onClick={() => setStitchCount(Math.max(0, stitchCount - 1))} style={{ width: 40, height: 40, borderRadius: '50%', border: '1px solid #eee', background: 'white', fontSize: 20, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>-</button>
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: 40, fontWeight: 700, color: '#3C3489' }}>{stitchCount}</div>
-                <div style={{ fontSize: 12, color: '#999' }}>stitches</div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 16 }}>
+              <div style={{ background: '#EEEDFE', borderRadius: 12, padding: '14px', textAlign: 'center' }}>
+                <div style={{ fontSize: 28, fontWeight: 700, color: '#3C3489' }}>{currentRow}</div>
+                <div style={{ fontSize: 12, color: '#7F77DD', marginTop: 2 }}>Current row</div>
               </div>
-              <button onClick={() => setStitchCount(stitchCount + 1)} style={{ width: 40, height: 40, borderRadius: '50%', border: 'none', background: '#3C3489', color: 'white', fontSize: 20, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
+              <div style={{ background: '#e8f5e9', borderRadius: 12, padding: '14px', textAlign: 'center' }}>
+                <div style={{ fontSize: 28, fontWeight: 700, color: '#2e7d32' }}>{totalStitches}</div>
+                <div style={{ fontSize: 12, color: '#4caf50', marginTop: 2 }}>Total stitches</div>
+              </div>
             </div>
-            <button onClick={() => setStitchCount(0)} style={{ width: '100%', padding: '7px', borderRadius: 8, border: '1px solid #eee', background: 'white', color: '#999', fontSize: 12, cursor: 'pointer' }}>Reset</button>
+
+            <div style={{ marginBottom: 14 }}>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#555', marginBottom: 6 }}>
+                Stitches in row {currentRow}
+              </label>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <button onClick={() => setStitchesThisRow(Math.max(0, stitchesThisRow - 1))} style={{ width: 36, height: 36, borderRadius: '50%', border: '1px solid #eee', background: 'white', fontSize: 18, cursor: 'pointer' }}>-</button>
+                <div style={{ flex: 1, textAlign: 'center', fontSize: 28, fontWeight: 700, color: '#1a1a1a' }}>{stitchesThisRow}</div>
+                <button onClick={() => setStitchesThisRow(stitchesThisRow + 1)} style={{ width: 36, height: 36, borderRadius: '50%', border: 'none', background: '#3C3489', color: 'white', fontSize: 18, cursor: 'pointer' }}>+</button>
+              </div>
+            </div>
+
+            <button onClick={completeRow} style={{ width: '100%', padding: '10px', borderRadius: 10, border: 'none', background: '#3C3489', color: 'white', fontSize: 13, fontWeight: 700, cursor: 'pointer', marginBottom: 8 }}>
+              Complete row {currentRow}
+            </button>
+
+            {rowLog.length > 0 && (
+              <button onClick={undoLastRow} style={{ width: '100%', padding: '8px', borderRadius: 10, border: '1px solid #eee', background: 'white', color: '#999', fontSize: 12, cursor: 'pointer', marginBottom: 12 }}>
+                Undo last row
+              </button>
+            )}
+
+            {rowLog.length > 0 && (
+              <div style={{ borderTop: '1px solid #eee', paddingTop: 12 }}>
+                <div style={{ fontSize: 12, fontWeight: 600, color: '#555', marginBottom: 8 }}>Row history</div>
+                <div style={{ maxHeight: 160, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  {rowLog.map((r, i) => (
+                    <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, padding: '5px 8px', borderRadius: 6, background: '#faf9f7' }}>
+                      <span style={{ color: '#666' }}>Row {r.row}</span>
+                      <span style={{ color: '#3C3489', fontWeight: 600 }}>{r.stitches} stitches</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           <div style={{ background: 'white', borderRadius: 16, padding: 20, border: '1px solid #eee' }}>
