@@ -15,7 +15,7 @@ export default function Admin() {
     yarn_image_url: '', hook_image_url: '',   // ← ADDED
     description: '', yarn_affiliate: '', yarn_name: '',
     yarn_price: '', hook_affiliate: '', hook_name: '',
-    hook_price: '', is_published: true
+    hook_price: '', hook_size: '', yarn_weight: '', yarn_type: '', tags: '', is_published: true
   }
 
   const [form, setForm] = useState(empty)
@@ -84,6 +84,10 @@ export default function Admin() {
       hook_affiliate: p.hook_affiliate || '',
       hook_name: p.hook_name || '',
       hook_price: p.hook_price || '',
+      hook_size: p.hook_size || '',
+      yarn_weight: p.yarn_weight || '',
+      yarn_type: p.yarn_type || '',
+      tags: p.tags || '',
       is_published: p.is_published
     })
     setEditingId(p.id)
@@ -150,6 +154,10 @@ export default function Admin() {
           {inp('Hook affiliate link', 'hook_affiliate', 'https://...')}
           {inp('Hook product name', 'hook_name', 'e.g. Clover Amour 4mm')}
           {inp('Hook price', 'hook_price', 'e.g. £8.50')}
+          {inp('Hook size', 'hook_size', 'e.g. 5mm, 6mm')}
+          {inp('Yarn weight', 'yarn_weight', 'e.g. Chunky, DK, Aran, Super Chunky')}
+          {inp('Yarn type', 'yarn_type', 'e.g. Cotton, Wool, Acrylic, T-Shirt Yarn')}
+          {inp('Tags', 'tags', 'e.g. summer, quick make, gift idea, colourful')}
 
           <div style={{ marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
             <input type="checkbox" checked={form.is_published}
