@@ -1,0 +1,6 @@
+<svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="300" height="300" rx="60" fill="#3C3489"/>
+  <path d="M40 110 Q90 72 140 110 Q190 148 240 110 Q262 93 285 110" fill="none" stroke="#C4BCE8" stroke-width="8" stroke-linecap="round"/>
+  <path d="M140 110 Q140 80 162 67 Q184 54 187 80 Q189 97 167 109 Q152 117 140 110Z" fill="none" stroke="#C4BCE8" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="150" y="240" font-family="Georgia, serif" font-size="110" font-weight="700" fill="white" text-anchor="middle">LB</text>
+</svg>
