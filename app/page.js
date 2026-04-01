@@ -209,9 +209,14 @@ export default function Home() {
               {selected.description && (
                 <p style={{ fontSize: 14, color: '#555', lineHeight: 1.7, marginBottom: 16 }}>{selected.description}</p>
               )}
-              <a href={selected.tutorial_url} target="_blank" rel="noopener noreferrer" style={{ display: 'block', textAlign: 'center', background: '#3C3489', color: 'white', padding: '12px', borderRadius: 10, fontSize: 15, fontWeight: 700, textDecoration: 'none', marginBottom: 16 }}>
-                View free pattern
-              </a>
+              <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
+                <a href={'/pattern/' + selected.id} style={{ flex: 1, display: 'block', textAlign: 'center', background: '#3C3489', color: 'white', padding: '12px', borderRadius: 10, fontSize: 14, fontWeight: 700, textDecoration: 'none' }}>
+                  Track progress
+                </a>
+                <a href={selected.tutorial_url} target="_blank" rel="noopener noreferrer" style={{ flex: 1, display: 'block', textAlign: 'center', background: 'white', color: '#3C3489', padding: '12px', borderRadius: 10, fontSize: 14, fontWeight: 700, textDecoration: 'none', border: '1.5px solid #3C3489' }}>
+                  View pattern
+                </a>
+              </div>
               {(selected.yarn_affiliate || selected.hook_affiliate) && (
                 <div style={{ borderTop: '1px solid #eee', paddingTop: 16 }}>
                   <p style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', marginBottom: 4 }}>Shop supplies</p>
