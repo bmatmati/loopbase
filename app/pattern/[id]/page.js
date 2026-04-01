@@ -93,16 +93,23 @@ export default function PatternDetail() {
       progress,
       row_log: JSON.stringify(rowLog)
     }
+    let error
     if (tracker) {
-      await supabase.from('saved_patterns').update(payload).eq('id', tracker.id)
+      const result = await supabase.from('saved_patterns').update(payload).eq('id', tracker.id)
+      error = result.error
     } else {
-      const { data } = await supabase.from('saved_patterns').insert([payload]).select().single()
-      setTracker(data)
+      const result = await supabase.from('saved_patterns').insert([payload]).select().single()
+      error = result.error
+      if (result.data) setTracker(result.data)
     }
-    setSaved(true)
     setSaving(false)
-    setMessage('Progress saved!')
-    setTimeout(() => setMessage(''), 2000)
+    if (error) {
+      setMessage('Error: ' + error.message)
+    } else {
+      setSaved(true)
+      setMessage('Progress saved!')
+      setTimeout(() => setMessage(''), 3000)
+    }
   }
 
   const levelColor = (d) => {
