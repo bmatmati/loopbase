@@ -18,7 +18,6 @@ export const metadata = {
   icons: {
   icon: '/favicon.svg',
   apple: '/favicon.svg',
-} apple: '/logo.png',
   },
   openGraph: {
     title: 'Loopbase — Free Crochet Patterns',

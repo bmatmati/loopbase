@@ -108,7 +108,11 @@ export default function Home() {
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 16 }}>
             <div>
-              <img src="/logo.png" alt="Loopbase" style={{ height: 48, width: 'auto' }} />
+              <img src="/logo.svg" alt="Loopbase" style={{ height: 48, width: 'auto' }} onError={e => { e.target.style.display='none' }} />
+              <div>
+                <div style={{ fontSize: 22, fontWeight: 700, color: '#3C3489', fontFamily: 'Georgia, serif' }}>Loopbase</div>
+                <div style={{ fontSize: 11, color: '#999' }}>Always free, forever</div>
+              </div>
             </div>
             <input type="text" placeholder="Search patterns, creators, categories..."
               value={search} onChange={e => setSearch(e.target.value)}
