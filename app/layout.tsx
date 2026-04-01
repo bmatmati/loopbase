@@ -1,33 +1,36 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const geistSans = Geist({
+const geistSans = localFont({
+  src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
-  subsets: ["latin"],
+  weight: "100 900",
 });
 
-const geistMono = Geist_Mono({
+const geistMono = localFont({
+  src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: "100 900",
 });
 
-export const metadata = {
-  title: 'Loopbase — Free Crochet Patterns',
-  description: 'Find hundreds of free crochet tutorials in one place. Filter by difficulty, time and format. Always free, forever.',
+export const metadata: Metadata = {
+  title: "Loopbase — Free Crochet Patterns",
+  description: "Find hundreds of free crochet tutorials in one place. Filter by difficulty, time and format. Always free, forever.",
   icons: {
-  icon: '/favicon.svg',
-  apple: '/favicon.svg',
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
   },
   openGraph: {
-    title: 'Loopbase — Free Crochet Patterns',
-    description: 'Find hundreds of free crochet tutorials in one place.',
-    url: 'https://loopbase.uk',
-    siteName: 'Loopbase',
-    images: [{ url: '/logo.png' }],
-    type: 'website',
-  }
-}
+    title: "Loopbase — Free Crochet Patterns",
+    description: "Find hundreds of free crochet tutorials in one place.",
+    url: "https://loopbase.uk",
+    siteName: "Loopbase",
+    images: [{ url: "/logo.svg" }],
+    type: "website",
+  },
+};
 
 export default function RootLayout({
   children,
@@ -35,10 +38,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
