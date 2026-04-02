@@ -1,16 +1,15 @@
 'use client'
-import { useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { supabase } from '../../../lib/supabase'
 
-export default function AuthConfirm() {
+function ConfirmInner() {
   const searchParams = useSearchParams()
 
   useEffect(() => {
     async function confirm() {
       const token_hash = searchParams.get('token_hash')
       const type = searchParams.get('type')
-
       if (token_hash && type) {
         const { error } = await supabase.auth.verifyOtp({ token_hash, type })
         if (!error) {
@@ -33,5 +32,20 @@ export default function AuthConfirm() {
         <p style={{ color: '#999', fontSize: 14 }}>You will be redirected shortly</p>
       </div>
     </div>
+  )
+}
+
+export default function AuthConfirm() {
+  return (
+    <Suspense fallback={
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'system-ui', background: '#faf9f7' }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: 48, marginBottom: 16 }}>🧶</div>
+          <p style={{ color: '#999', fontSize: 14 }}>Loading...</p>
+        </div>
+      </div>
+    }>
+      <ConfirmInner />
+    </Suspense>
   )
 }
