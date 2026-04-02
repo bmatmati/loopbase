@@ -176,7 +176,7 @@ export default function PatternDetail() {
             View free pattern
           </a>
           {(pattern.yarn_affiliate || pattern.hook_affiliate) && (
-            <div style={{ background: 'white', borderRadius: 16, padding: 20, border: '1px solid #eee' }}>
+            <div style={{ background: 'white', borderRadius: 16, padding: 20, border: '1.5px solid #ede9fe', boxShadow: '0 1px 4px rgba(60,52,137,0.06)' }}>
               <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 4, color: '#1a1a1a' }}>Shop supplies</h3>
               <p style={{ fontSize: 12, color: '#aaa', marginBottom: 14 }}>Affiliate links - small commission at no extra cost to you</p>
               {pattern.yarn_affiliate && (
@@ -205,10 +205,10 @@ export default function PatternDetail() {
           )}
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, position: 'sticky', top: 90 }}>
 
-          <div style={{ background: 'white', borderRadius: 16, padding: 20, border: '1px solid #eee' }}>
-            <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 14, color: '#1a1a1a' }}>Progress status</h3>
+          <div style={{ background: 'white', borderRadius: 16, padding: 20, border: '1.5px solid #ede9fe', boxShadow: '0 1px 4px rgba(60,52,137,0.06)' }}>
+            <h3 style={{ fontSize: 14, fontWeight: 700, marginBottom: 14, color: '#3C3489', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Progress status</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {progressOptions.map(opt => (
                 <button key={opt.value} onClick={() => setProgress(opt.value)} style={{
@@ -227,8 +227,8 @@ export default function PatternDetail() {
             </div>
           </div>
 
-          <div style={{ background: 'white', borderRadius: 16, padding: 20, border: '1px solid #eee' }}>
-            <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, color: '#1a1a1a' }}>Stitch tracker</h3>
+          <div style={{ background: 'white', borderRadius: 16, padding: 20, border: '1.5px solid #ede9fe', boxShadow: '0 1px 4px rgba(60,52,137,0.06)' }}>
+            <h3 style={{ fontSize: 14, fontWeight: 700, marginBottom: 16, color: '#3C3489', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Stitch tracker</h3>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 16 }}>
               <div style={{ background: '#EEEDFE', borderRadius: 12, padding: '14px', textAlign: 'center' }}>
@@ -277,11 +277,11 @@ export default function PatternDetail() {
             )}
           </div>
 
-          <div style={{ background: 'white', borderRadius: 16, padding: 20, border: '1px solid #eee' }}>
-            <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 10, color: '#1a1a1a' }}>My notes</h3>
+          <div style={{ background: 'white', borderRadius: 16, padding: 20, border: '1.5px solid #ede9fe', boxShadow: '0 1px 4px rgba(60,52,137,0.06)' }}>
+            <h3 style={{ fontSize: 14, fontWeight: 700, marginBottom: 10, color: '#3C3489', textTransform: 'uppercase', letterSpacing: '0.06em' }}>My notes</h3>
             <textarea value={notes} onChange={e => setNotes(e.target.value)}
               placeholder="e.g. Use 5mm hook, rows 1-10 done, need more yarn..."
-              style={{ width: '100%', height: 120, padding: '10px 12px', borderRadius: 10, border: '1.5px solid #eee', fontSize: 13, outline: 'none', resize: 'none', fontFamily: 'system-ui', boxSizing: 'border-box', lineHeight: 1.6 }} />
+              style={{ width: '100%', height: 140, padding: '12px 14px', borderRadius: 12, border: '1.5px solid #ede9fe', fontSize: 13, outline: 'none', resize: 'none', fontFamily: 'inherit', boxSizing: 'border-box', lineHeight: 1.7, color: '#374151', background: '#faf9ff' }} />
           </div>
 
           {message && (
