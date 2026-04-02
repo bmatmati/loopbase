@@ -158,7 +158,7 @@ export default function PatternDetail() {
           {pattern.description && (
             <p style={{ fontSize: 15, color: '#555', lineHeight: 1.8, marginBottom: 20 }}>{pattern.description}</p>
           )}
-          <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: 24 }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: 24 }}><tbody>
             {[
               pattern.hook_size && ['Hook size', pattern.hook_size],
               pattern.yarn_weight && ['Yarn weight', pattern.yarn_weight],
@@ -170,7 +170,7 @@ export default function PatternDetail() {
                 <td style={{ padding: '10px 0', fontSize: 14, color: '#333', fontWeight: 500 }}>{value}</td>
               </tr>
             ))}
-          </table>
+            </tbody></table>
           <a href={pattern.tutorial_url} target="_blank" rel="noopener noreferrer"
             style={{ display: 'block', textAlign: 'center', background: '#3C3489', color: 'white', padding: '14px', borderRadius: 12, fontSize: 16, fontWeight: 700, textDecoration: 'none', marginBottom: 24 }}>
             View free pattern
