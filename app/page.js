@@ -20,6 +20,16 @@ export default function Home() {
   const [format, setFormat] = useState(null)
   const [search, setSearch] = useState('')
   const [selected, setSelected] = useState(null)
+  const [welcome, setWelcome] = useState(false)
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('confirmed') === 'true') {
+      setWelcome(true)
+      setTimeout(() => setWelcome(false), 5000)
+      window.history.replaceState({}, '', '/')
+    }
+  }, [])
   const [user, setUser] = useState(null)
   const [saved, setSaved] = useState([])
 
@@ -156,6 +166,11 @@ export default function Home() {
         </div>
         <a href="/extension" style={{ fontSize: 12, fontWeight: 600, color: '#3C3489', textDecoration: 'none', background: 'white', padding: '6px 14px', borderRadius: 20, border: '1px solid #3C3489', whiteSpace: 'nowrap' }}>Get it free</a>
       </div>
+      {welcome && (
+        <div style={{ background: '#e8f5e9', borderBottom: '1px solid #c8e6c9', padding: '12px 24px', textAlign: 'center' }}>
+          <span style={{ fontSize: 14, color: '#2e7d32', fontWeight: 600 }}>Welcome to Loopbase! Your account is confirmed. Start exploring free patterns!</span>
+        </div>
+      )}
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '24px' }}>
         <p style={{ fontSize: 13, color: '#999', marginBottom: 20 }}>{filtered.length} free patterns</p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 20 }}>

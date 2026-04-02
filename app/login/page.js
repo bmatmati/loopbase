@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '../../lib/supabase'
 
 export default function Login() {
@@ -8,6 +8,13 @@ export default function Login() {
   const [mode, setMode] = useState('login')
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('error') === 'confirmation_failed') {
+      setMessage('Error: Confirmation link expired. Please sign up again.')
+    }
+  }, [])
 
   async function handleSubmit() {
     setLoading(true)
