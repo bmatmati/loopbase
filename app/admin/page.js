@@ -18,6 +18,40 @@ export default function Admin() {
     hook_price: '', hook_size: '', yarn_weight: '', yarn_type: '', tags: '', is_published: true
   }
 
+  const [urlInput, setUrlInput] = useState('')
+  const [fetching, setFetching] = useState(false)
+  const [fetchMessage, setFetchMessage] = useState('')
+
+  async function fetchFromUrl() {
+    if (!urlInput) return
+    setFetching(true)
+    setFetchMessage('')
+    try {
+      const res = await fetch('/api/fetch-url', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: urlInput })
+      })
+      const data = await res.json()
+      if (data.error) {
+        setFetchMessage('Could not fetch: ' + data.error)
+      } else {
+        setForm(f => ({
+          ...f,
+          title: data.title || f.title,
+          description: data.description || f.description,
+          image_url: data.image || f.image_url,
+          author: data.author || f.author,
+          tutorial_url: urlInput
+        }))
+        setFetchMessage('Details imported! Check and edit below.')
+      }
+    } catch(e) {
+      setFetchMessage('Failed to fetch URL')
+    }
+    setFetching(false)
+  }
+
   const [form, setForm] = useState(empty)
 
   useEffect(() => { fetchPatterns() }, [])
@@ -130,6 +164,29 @@ export default function Admin() {
           <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20, color: '#1a1a1a' }}>
             {editingId ? 'Edit pattern' : 'Add new pattern'}
           </h2>
+
+          <div style={{ marginBottom: 20, background: '#f5f3ff', borderRadius: 12, padding: 16, border: '1.5px solid #ede9fe' }}>
+            <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#3C3489', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+              Auto-fill from URL
+            </label>
+            <p style={{ fontSize: 12, color: '#6b7280', marginBottom: 10 }}>Paste a YouTube or blog URL to automatically import title, image and description</p>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <input
+                type="text"
+                value={urlInput}
+                onChange={e => setUrlInput(e.target.value)}
+                placeholder="https://youtube.com/watch?v=... or blog URL"
+                style={{ flex: 1, padding: '9px 12px', borderRadius: 8, border: '1.5px solid #ede9fe', fontSize: 13, outline: 'none', boxSizing: 'border-box' }}
+                onKeyDown={e => e.key === 'Enter' && fetchFromUrl()}
+              />
+              <button onClick={fetchFromUrl} disabled={fetching} style={{ padding: '9px 16px', borderRadius: 8, border: 'none', background: '#3C3489', color: 'white', fontSize: 13, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                {fetching ? 'Fetching...' : 'Import'}
+              </button>
+            </div>
+            {fetchMessage && (
+              <p style={{ fontSize: 12, marginTop: 8, color: fetchMessage.includes('Could not') ? '#c62828' : '#2e7d32', fontWeight: 600 }}>{fetchMessage}</p>
+            )}
+          </div>
 
           {inp('Title *', 'title', 'e.g. Chunky Beanie Hat')}
           {inp('Author', 'author', 'e.g. CozyStitches')}
