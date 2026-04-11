@@ -25,31 +25,19 @@ export default function About() {
 
       <div style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px' }}>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginTop: -32, marginBottom: 64 }}>
-          {[
-            { icon: '🧶', value: 'Free', label: 'Always and forever', bg: 'white' },
-            { icon: '📖', value: '100+', label: 'Free patterns', bg: 'white' },
-            { icon: '🌍', label: 'Community first', icon2: '💜', bg: 'white' },
-          ].map((s, i) => (
-            <div key={i} style={{ background: 'white', borderRadius: 20, padding: '28px 20px', textAlign: 'center', border: '1.5px solid #ede9fe', boxShadow: '0 4px 20px rgba(60,52,137,0.08)' }}>
-              <div style={{ fontSize: 36, marginBottom: 12 }}>{s.icon}</div>
-              {s.value && <div style={{ fontSize: 28, fontWeight: 800, color: '#3C3489', marginBottom: 4 }}>{s.value}</div>}
-              <div style={{ fontSize: 13, color: '#6b7280', fontWeight: 500 }}>{s.label}</div>
-            </div>
-          ))}
-        </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 40 }}>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 40, marginTop: 48 }}>
           {[
-            { icon: '🔍', title: 'Find patterns fast', body: 'Search by difficulty, time, format, yarn weight, hook size and more. We surface the right pattern for your skill level and available time.' },
-            { icon: '💾', title: 'Save your favourites', body: 'Heart any pattern to save it to your collection. Your saved patterns are always there waiting for you when you are ready to start.' },
-            { icon: '📊', title: 'Track your progress', body: 'Log your rows, count your stitches and add notes to every pattern you are working on. Our tracker keeps your projects organised.' },
-            { icon: '🧩', title: 'Save from anywhere', body: 'Use our browser extension to save free patterns from any website directly to your Loopbase collection. One click, any site.' },
+            { icon: '🔍', title: 'Find patterns fast', body: 'Search by difficulty, time, format, yarn weight, hook size and more. We surface the right pattern for your skill level and available time.', accent: '#EEEDFE', iconBg: '#3C3489' },
+            { icon: '♥', title: 'Save your favourites', body: 'Heart any pattern to save it to your collection. Your saved patterns are always there waiting for you when you are ready to start.', accent: '#fce4ec', iconBg: '#e11d48' },
+            { icon: '◎', title: 'Track your progress', body: 'Log your rows, count your stitches and add notes to every pattern you are working on. Our built-in tracker keeps all your projects organised.', accent: '#e8f5e9', iconBg: '#2e7d32' },
+            { icon: '⊕', title: 'Save from anywhere', body: 'Use our browser extension to save free patterns from any website directly to your Loopbase collection. One click, any website.', accent: '#fff8e1', iconBg: '#f57f17' },
           ].map((f, i) => (
-            <div key={i} style={{ background: 'white', borderRadius: 18, padding: '24px', border: '1.5px solid #ede9fe' }}>
-              <div style={{ fontSize: 32, marginBottom: 14 }}>{f.icon}</div>
-              <div style={{ fontSize: 16, fontWeight: 700, color: '#1a1a1a', marginBottom: 8 }}>{f.title}</div>
-              <div style={{ fontSize: 14, color: '#6b7280', lineHeight: 1.7 }}>{f.body}</div>
+            <div key={i} style={{ background: 'white', borderRadius: 20, padding: '28px', border: '1.5px solid #ede9fe', boxShadow: '0 2px 12px rgba(60,52,137,0.06)' }}>
+              <div style={{ width: 48, height: 48, borderRadius: 14, background: f.accent, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 18, fontSize: 22, color: f.iconBg, fontWeight: 700 }}>{f.icon}</div>
+              <div style={{ fontSize: 17, fontWeight: 700, color: '#1a1a1a', marginBottom: 10, letterSpacing: '-0.2px' }}>{f.title}</div>
+              <div style={{ fontSize: 14, color: '#6b7280', lineHeight: 1.75 }}>{f.body}</div>
             </div>
           ))}
         </div>
