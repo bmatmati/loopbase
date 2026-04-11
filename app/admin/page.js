@@ -161,6 +161,7 @@ export default function Admin() {
       return
     }
     let result
+    console.log('form.image_url before save:', form.image_url)
     const cleanForm = {
       title: form.title, author: form.author, difficulty: form.difficulty,
       time_estimate: form.time_estimate, category: form.category, format: form.format,
