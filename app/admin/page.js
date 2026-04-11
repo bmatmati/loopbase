@@ -161,10 +161,21 @@ export default function Admin() {
       return
     }
     let result
+    const cleanForm = {
+      title: form.title, author: form.author, difficulty: form.difficulty,
+      time_estimate: form.time_estimate, category: form.category, format: form.format,
+      tutorial_url: form.tutorial_url, image_url: form.image_url,
+      description: form.description, yarn_affiliate: form.yarn_affiliate,
+      yarn_name: form.yarn_name, yarn_price: form.yarn_price,
+      hook_affiliate: form.hook_affiliate, hook_name: form.hook_name,
+      hook_price: form.hook_price, hook_size: form.hook_size,
+      yarn_weight: form.yarn_weight, yarn_type: form.yarn_type,
+      tags: form.tags, is_published: form.is_published
+    }
     if (editingId) {
-      result = await supabase.from('patterns').update(form).eq('id', editingId)
+      result = await supabase.from('patterns').update(cleanForm).eq('id', editingId)
     } else {
-      result = await supabase.from('patterns').insert([form])
+      result = await supabase.from('patterns').insert([cleanForm])
     }
     if (result.error) {
       setMessage('Error: ' + result.error.message)
