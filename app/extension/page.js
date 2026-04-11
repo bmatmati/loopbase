@@ -8,7 +8,7 @@ export default function Extension() {
       </div>
 
       <div style={{ maxWidth: 700, margin: '0 auto', padding: '48px 24px', textAlign: 'center' }}>
-        <div style={{ fontSize: 64, marginBottom: 24 }}>🧩</div>
+        <img src="/logo.png" alt="Loopbase" style={{ width: 100, height: 100, borderRadius: 24, marginBottom: 24, boxShadow: '0 8px 32px rgba(60,52,137,0.2)' }} />
         <h1 style={{ fontSize: 32, fontWeight: 700, color: '#3C3489', marginBottom: 12 }}>Loopbase Browser Extension</h1>
         <p style={{ fontSize: 18, color: '#6b7280', lineHeight: 1.7, marginBottom: 32 }}>
           Save any free crochet pattern from anywhere on the web directly to your Loopbase collection. One click, any website.
