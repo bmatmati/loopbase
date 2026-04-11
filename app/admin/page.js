@@ -139,6 +139,15 @@ export default function Admin() {
     setPatterns(data || [])
   }
 
+  async function fetchPatternsForced() {
+    await new Promise(r => setTimeout(r, 500))
+    const { data } = await supabase
+      .from('patterns')
+      .select('*')
+      .order('created_at', { ascending: false })
+    setPatterns(data || [])
+  }
+
   function set(field, value) {
     setForm(f => ({ ...f, [field]: value }))
   }
@@ -173,7 +182,7 @@ export default function Admin() {
     if (!confirm('Delete this pattern?')) return
     const { error } = await supabase.from('patterns').delete().eq('id', id)
     if (error) { alert('Delete error: ' + error.message); return }
-    fetchPatterns()
+    setPatterns(prev => prev.filter(p => p.id !== id))
   }
 
   function handleEdit(p) {
