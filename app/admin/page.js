@@ -24,6 +24,39 @@ export default function Admin() {
   const [importing, setImporting] = useState(false)
   const [importMessage, setImportMessage] = useState('')
 
+  async function handleImportXLSX(file) {
+    setImporting(true)
+    setImportMessage('')
+    try {
+      const XLSX = await import('https://cdn.jsdelivr.net/npm/xlsx@0.18.5/+esm')
+      const buffer = await file.arrayBuffer()
+      const wb = XLSX.read(buffer, { type: 'array' })
+      const ws = wb.Sheets[wb.SheetNames[0]]
+      const rows = XLSX.utils.sheet_to_json(ws, { defval: '' })
+      const filtered = rows.filter(r => r.title && r.tutorial_url)
+      if (!filtered.length) {
+        setImportMessage('No valid patterns found. Make sure title and tutorial_url are filled in.')
+        setImporting(false)
+        return
+      }
+      const res = await fetch('/api/import-patterns', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ patterns: filtered })
+      })
+      const data = await res.json()
+      if (data.error) {
+        setImportMessage('Error: ' + data.error)
+      } else {
+        setImportMessage(data.count + ' patterns imported successfully!')
+        fetchPatterns()
+      }
+    } catch(e) {
+      setImportMessage('Failed to import: ' + e.message)
+    }
+    setImporting(false)
+  }
+
   async function fetchFromUrl() {
     if (!urlInput) return
     setFetching(true)
@@ -52,6 +85,39 @@ export default function Admin() {
       setFetchMessage('Failed to fetch URL')
     }
     setFetching(false)
+  }
+
+  async function handleImportXLSX(file) {
+    setImporting(true)
+    setImportMessage('')
+    try {
+      const XLSX = await import('https://cdn.jsdelivr.net/npm/xlsx@0.18.5/+esm')
+      const buffer = await file.arrayBuffer()
+      const wb = XLSX.read(buffer, { type: 'array' })
+      const ws = wb.Sheets[wb.SheetNames[0]]
+      const rows = XLSX.utils.sheet_to_json(ws, { defval: '' })
+      const filtered = rows.filter(r => r.title && r.tutorial_url)
+      if (!filtered.length) {
+        setImportMessage('No valid patterns found. Make sure title and tutorial_url are filled in.')
+        setImporting(false)
+        return
+      }
+      const res = await fetch('/api/import-patterns', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ patterns: filtered })
+      })
+      const data = await res.json()
+      if (data.error) {
+        setImportMessage('Error: ' + data.error)
+      } else {
+        setImportMessage(data.count + ' patterns imported successfully!')
+        fetchPatterns()
+      }
+    } catch(e) {
+      setImportMessage('Failed to import: ' + e.message)
+    }
+    setImporting(false)
   }
 
   async function fetchFromUrl() {
