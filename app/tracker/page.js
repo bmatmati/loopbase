@@ -135,7 +135,7 @@ export default function Tracker() {
     <div style={{ minHeight: '100vh', background: '#f8f7ff', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
       <div style={{ background: 'white', borderBottom: '1px solid #ede9fe', padding: '14px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 1px 12px rgba(60,52,137,0.06)' }}>
         <a href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10 }}>
-          <img src="/logo.svg" alt="Loopbase" style={{ height: 36, width: 36, borderRadius: 8 }} />
+          <img src="/logo.png" alt="Loopbase" style={{ height: 36, width: 36, borderRadius: 8 }} />
           <span style={{ fontSize: 20, fontWeight: 700, color: '#3C3489' }}>Loopbase</span>
         </a>
         <div style={{ display: 'flex', gap: 10 }}>

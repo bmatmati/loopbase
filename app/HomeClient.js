@@ -142,7 +142,7 @@ export default function HomeClient({ initialPatterns = [], difficulty: initDiffi
 
           <div className="header-row" style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 14 }}>
             <a href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
-              <img src="/logo.svg" alt="Loopbase" style={{ height: 38, width: 38, borderRadius: 10 }} />
+              <img src="/logo.png" alt="Loopbase" style={{ height: 38, width: 38, borderRadius: 10 }} />
               <span style={{ fontSize: 22, fontWeight: 700, color: '#3C3489', letterSpacing: '-0.5px' }}>Loopbase</span>
             </a>
 
@@ -291,7 +291,7 @@ export default function HomeClient({ initialPatterns = [], difficulty: initDiffi
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 20, marginBottom: 24 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <img src="/logo.svg" alt="Loopbase" style={{ height: 32, width: 32, borderRadius: 8 }} />
+              <img src="/logo.png" alt="Loopbase" style={{ height: 32, width: 32, borderRadius: 8 }} />
               <span style={{ fontSize: 18, fontWeight: 700, color: '#3C3489' }}>Loopbase</span>
             </div>
             <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>

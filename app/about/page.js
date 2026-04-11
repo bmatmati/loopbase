@@ -5,14 +5,14 @@ export default function About() {
 
       <div style={{ background: 'white', borderBottom: '1px solid #ede9fe', padding: '14px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 1px 12px rgba(60,52,137,0.06)' }}>
         <a href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10 }}>
-          <img src="/logo.svg" alt="Loopbase" style={{ height: 36, width: 36, borderRadius: 8 }} />
+          <img src="/logo.png" alt="Loopbase" style={{ height: 36, width: 36, borderRadius: 8 }} />
           <span style={{ fontSize: 20, fontWeight: 700, color: '#3C3489' }}>Loopbase</span>
         </a>
         <a href="/" style={{ fontSize: 13, color: '#6b7280', textDecoration: 'none', padding: '7px 14px', borderRadius: 20, border: '1.5px solid #e5e7eb' }}>Browse patterns</a>
       </div>
 
       <div style={{ background: '#3C3489', padding: '64px 24px', textAlign: 'center' }}>
-        <img src="/logo.svg" alt="Loopbase" style={{ height: 72, width: 72, borderRadius: 20, marginBottom: 24, border: '3px solid rgba(255,255,255,0.2)' }} />
+        <img src="/logo.png" alt="Loopbase" style={{ height: 72, width: 72, borderRadius: 20, marginBottom: 24, border: '3px solid rgba(255,255,255,0.2)' }} />
         <h1 style={{ fontSize: 40, fontWeight: 800, color: 'white', marginBottom: 16, letterSpacing: '-1px' }}>Built for crochet lovers</h1>
         <p style={{ fontSize: 18, color: '#C4BCE8', maxWidth: 520, margin: '0 auto 32px', lineHeight: 1.7 }}>
           Loopbase brings the best free crochet tutorials together in one place. No paywalls, no subscriptions — always free, forever.
