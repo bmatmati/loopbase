@@ -83,6 +83,17 @@ export default function PatternDetail() {
 
   async function saveTracker() {
     if (!user) { window.location.href = '/login'; return }
+    if (progress !== 'not_started' || rowCount > 0 || stitchCount > 0 || notes) {
+      const alreadySaved = await supabase
+        .from('saved_patterns')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('pattern_id', id)
+        .single()
+      if (!alreadySaved.data && !tracker) {
+        setSaved(true)
+      }
+    }
     setSaving(true)
     const payload = {
       user_id: user.id,

@@ -25,6 +25,7 @@ export default function Saved() {
       .select('*, patterns(*)')
       .eq('user_id', userId)
       .not('pattern_id', 'is', null)
+      .order('created_at', { ascending: false })
     setPatterns((data || []).filter(s => s.patterns))
     setLoading(false)
   }
