@@ -203,34 +203,17 @@ export default function Admin() {
               Bulk import from spreadsheet
             </label>
             <p style={{ fontSize: 12, color: '#4b7a52', marginBottom: 10 }}>Upload your filled-in Excel template to import multiple patterns at once</p>
-            <input
-              type="file"
-              accept=".xlsx,.xls"
-              onChange={e => e.target.files[0] && handleImportXLSX(e.target.files[0])}
-              style={{ fontSize: 13, marginBottom: 8 }}
-            />
+            <label style={{ display: 'inline-block', padding: '9px 18px', borderRadius: 8, background: '#2e7d32', color: 'white', fontSize: 13, fontWeight: 700, cursor: 'pointer', marginBottom: 8 }}>
+              Upload spreadsheet
+              <input type="file" accept=".xlsx,.xls" onChange={e => e.target.files[0] && handleImportXLSX(e.target.files[0])} style={{ display: 'none' }} />
+            </label>
             {importing && <p style={{ fontSize: 12, color: '#2e7d32', fontWeight: 600 }}>Importing patterns...</p>}
             {importMessage && (
               <p style={{ fontSize: 12, marginTop: 4, color: importMessage.includes('Error') || importMessage.includes('Failed') ? '#c62828' : '#2e7d32', fontWeight: 600 }}>{importMessage}</p>
             )}
           </div>
 
-          <div style={{ marginBottom: 16, background: '#e8f5e9', borderRadius: 12, padding: 16, border: '1.5px solid #c8e6c9' }}>
-            <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#2e7d32', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-              Bulk import from spreadsheet
-            </label>
-            <p style={{ fontSize: 12, color: '#4b7a52', marginBottom: 10 }}>Upload your filled-in Excel template to import multiple patterns at once</p>
-            <input
-              type="file"
-              accept=".xlsx,.xls"
-              onChange={e => e.target.files[0] && handleImportXLSX(e.target.files[0])}
-              style={{ fontSize: 13, marginBottom: 8 }}
-            />
-            {importing && <p style={{ fontSize: 12, color: '#2e7d32', fontWeight: 600 }}>Importing patterns...</p>}
-            {importMessage && (
-              <p style={{ fontSize: 12, marginTop: 4, color: importMessage.includes('Error') || importMessage.includes('Failed') ? '#c62828' : '#2e7d32', fontWeight: 600 }}>{importMessage}</p>
-            )}
-          </div>
+          
 
           <div style={{ marginBottom: 20, background: '#f5f3ff', borderRadius: 12, padding: 16, border: '1.5px solid #ede9fe' }}>
             <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#3C3489', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
