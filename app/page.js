@@ -224,7 +224,20 @@ export default function Home() {
 
                 <div style={{ position: 'relative', height: 210, background: '#f5f3ff', overflow: 'hidden' }}>
                   {p.image_url
-                    ? <img src={p.image_url} alt={p.title} className="card-img" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.4s ease' }} />
+                    ? <img src={p.image_url} alt={p.title} className="card-img"
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.4s ease', cursor: 'pointer' }}
+                      onClick={() => window.open(p.tutorial_url, '_blank')}
+                      onMouseDown={e => {
+                        if (e.button !== 0) return
+                        const timer = setTimeout(() => { window.location.href = '/pattern/' + p.id }, 600)
+                        e.currentTarget.addEventListener('mouseup', () => clearTimeout(timer), { once: true })
+                        e.currentTarget.addEventListener('mouseleave', () => clearTimeout(timer), { once: true })
+                      }}
+                      onTouchStart={e => {
+                        const timer = setTimeout(() => { window.location.href = '/pattern/' + p.id }, 600)
+                        e.currentTarget.addEventListener('touchend', () => clearTimeout(timer), { once: true })
+                      }}
+                    />
                     : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 52 }}>🧶</div>
                   }
                   <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.15) 100%)' }} />
