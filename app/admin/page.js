@@ -52,6 +52,40 @@ export default function Admin() {
     setFetching(false)
   }
 
+  const [urlInput, setUrlInput] = useState('')
+  const [fetching, setFetching] = useState(false)
+  const [fetchMessage, setFetchMessage] = useState('')
+
+  async function fetchFromUrl() {
+    if (!urlInput) return
+    setFetching(true)
+    setFetchMessage('')
+    try {
+      const res = await fetch('/api/fetch-url', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: urlInput })
+      })
+      const data = await res.json()
+      if (data.error) {
+        setFetchMessage('Could not fetch: ' + data.error)
+      } else {
+        setForm(f => ({
+          ...f,
+          title: data.title || f.title,
+          description: data.description || f.description,
+          image_url: data.image || f.image_url,
+          author: data.author || f.author,
+          tutorial_url: urlInput
+        }))
+        setFetchMessage('Details imported! Check and edit below.')
+      }
+    } catch(e) {
+      setFetchMessage('Failed to fetch URL')
+    }
+    setFetching(false)
+  }
+
   const [form, setForm] = useState(empty)
 
   useEffect(() => { fetchPatterns() }, [])
@@ -164,6 +198,40 @@ export default function Admin() {
           <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20, color: '#1a1a1a' }}>
             {editingId ? 'Edit pattern' : 'Add new pattern'}
           </h2>
+
+          <div style={{ marginBottom: 16, background: '#e8f5e9', borderRadius: 12, padding: 16, border: '1.5px solid #c8e6c9' }}>
+            <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#2e7d32', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+              Bulk import from spreadsheet
+            </label>
+            <p style={{ fontSize: 12, color: '#4b7a52', marginBottom: 10 }}>Upload your filled-in Excel template to import multiple patterns at once</p>
+            <input
+              type="file"
+              accept=".xlsx,.xls"
+              onChange={e => e.target.files[0] && handleImportXLSX(e.target.files[0])}
+              style={{ fontSize: 13, marginBottom: 8 }}
+            />
+            {importing && <p style={{ fontSize: 12, color: '#2e7d32', fontWeight: 600 }}>Importing patterns...</p>}
+            {importMessage && (
+              <p style={{ fontSize: 12, marginTop: 4, color: importMessage.includes('Error') || importMessage.includes('Failed') ? '#c62828' : '#2e7d32', fontWeight: 600 }}>{importMessage}</p>
+            )}
+          </div>
+
+          <div style={{ marginBottom: 16, background: '#e8f5e9', borderRadius: 12, padding: 16, border: '1.5px solid #c8e6c9' }}>
+            <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#2e7d32', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+              Bulk import from spreadsheet
+            </label>
+            <p style={{ fontSize: 12, color: '#4b7a52', marginBottom: 10 }}>Upload your filled-in Excel template to import multiple patterns at once</p>
+            <input
+              type="file"
+              accept=".xlsx,.xls"
+              onChange={e => e.target.files[0] && handleImportXLSX(e.target.files[0])}
+              style={{ fontSize: 13, marginBottom: 8 }}
+            />
+            {importing && <p style={{ fontSize: 12, color: '#2e7d32', fontWeight: 600 }}>Importing patterns...</p>}
+            {importMessage && (
+              <p style={{ fontSize: 12, marginTop: 4, color: importMessage.includes('Error') || importMessage.includes('Failed') ? '#c62828' : '#2e7d32', fontWeight: 600 }}>{importMessage}</p>
+            )}
+          </div>
 
           <div style={{ marginBottom: 20, background: '#f5f3ff', borderRadius: 12, padding: 16, border: '1.5px solid #ede9fe' }}>
             <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#3C3489', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
