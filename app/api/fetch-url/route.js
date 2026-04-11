@@ -5,30 +5,41 @@ export async function POST(request) {
     const { url } = await request.json()
     if (!url) return NextResponse.json({ error: 'No URL provided' }, { status: 400 })
 
-    const res = await fetch(url, {
-      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; Loopbase/1.0)' }
-    })
+    let title = '', description = '', image = '', author = ''
 
-    const html = await res.text()
+    const isYouTube = url.includes('youtube.com') || url.includes('youtu.be')
 
-    function getMeta(prop) {
-      const r1 = new RegExp('<meta[^>]+property=["\']' + prop + '["\'][^>]+content=["\']([^"\']+)["\']', 'i')
-      const r2 = new RegExp('<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']' + prop + '["\']', 'i')
-      const r3 = new RegExp('<meta[^>]+name=["\']' + prop + '["\'][^>]+content=["\']([^"\']+)["\']', 'i')
-      const m = html.match(r1) || html.match(r2) || html.match(r3)
-      return m ? m[1].trim() : ''
-    }
+    if (isYouTube) {
+      const oembedUrl = 'https://www.youtube.com/oembed?url=' + encodeURIComponent(url) + '&format=json'
+      const res = await fetch(oembedUrl)
+      if (res.ok) {
+        const data = await res.json()
+        title = data.title || ''
+        author = data.author_name || ''
+        const videoId = url.match(/(?:v=|youtu\.be\/)([^&\?]+)/)?.[1]
+        if (videoId) {
+          image = 'https://img.youtube.com/vi/' + videoId + '/maxresdefault.jpg'
+        }
+      }
+    } else {
+      const res = await fetch(url, {
+        headers: { 'User-Agent': 'Mozilla/5.0 (compatible; Loopbase/1.0)' }
+      })
+      const html = await res.text()
 
-    const titleTag = html.match(/<title[^>]*>([^<]+)<\/title>/i)
-    const rawTitle = getMeta('og:title') || (titleTag ? titleTag[1].trim() : '')
-    const title = rawTitle.replace(' - YouTube', '').replace(' | YouTube', '').trim()
-    const description = (getMeta('og:description') || getMeta('description')).substring(0, 200)
-    const image = getMeta('og:image')
+      function getMeta(prop) {
+        const r1 = new RegExp('<meta[^>]+property=["\']' + prop + '["\'][^>]+content=["\']([^"\']+)["\']', 'i')
+        const r2 = new RegExp('<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']' + prop + '["\']', 'i')
+        const r3 = new RegExp('<meta[^>]+name=["\']' + prop + '["\'][^>]+content=["\']([^"\']+)["\']', 'i')
+        const m = html.match(r1) || html.match(r2) || html.match(r3)
+        return m ? m[1].trim() : ''
+      }
 
-    let author = getMeta('og:site_name') || getMeta('author') || ''
-    if (url.includes('youtube.com') || url.includes('youtu.be')) {
-      const ch = html.match(/"ownerChannelName":"([^"]+)"/) || html.match(/"author":"([^"]+)"/)
-      if (ch) author = ch[1]
+      const titleTag = html.match(/<title[^>]*>([^<]+)<\/title>/i)
+      title = getMeta('og:title') || (titleTag ? titleTag[1].trim() : '')
+      description = (getMeta('og:description') || getMeta('description')).substring(0, 300)
+      image = getMeta('og:image')
+      author = getMeta('og:site_name') || getMeta('author') || ''
     }
 
     return NextResponse.json({ title, description, image, author, url })

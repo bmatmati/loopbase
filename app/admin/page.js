@@ -82,13 +82,38 @@ export default function Admin() {
       if (data.error) {
         setFetchMessage('Could not fetch: ' + data.error)
       } else {
+        const t = (data.title || '').toLowerCase()
+        const d = (data.description || '').toLowerCase()
+        const combined = t + ' ' + d
+
+        const difficulty = combined.includes('beginner') || combined.includes('easy') || combined.includes('simple') ? 'Beginner'
+          : combined.includes('advanced') || combined.includes('complex') || combined.includes('difficult') ? 'Advanced'
+          : 'Intermediate'
+
+        const format = urlInput.includes('youtube.com') || urlInput.includes('youtu.be') ? 'video' : 'pattern'
+
+        const category = combined.includes('hat') || combined.includes('beanie') || combined.includes('scarf') || combined.includes('bag') || combined.includes('purse') ? 'Accessories'
+          : combined.includes('blanket') || combined.includes('pillow') || combined.includes('coaster') || combined.includes('home') ? 'Home'
+          : combined.includes('amigurumi') || combined.includes('toy') || combined.includes('stuffed') || combined.includes('plush') ? 'Toys'
+          : combined.includes('top') || combined.includes('cardigan') || combined.includes('sweater') || combined.includes('dress') || combined.includes('shirt') ? 'Garments'
+          : combined.includes('baby') || combined.includes('newborn') || combined.includes('infant') ? 'Baby'
+          : 'Accessories'
+
+        const time = combined.includes('quick') || combined.includes('fast') || combined.includes('easy') || combined.includes('beginner') ? 'Under 2h'
+          : combined.includes('weekend') || combined.includes('hours') ? '2-5h'
+          : '2-5h'
+
         setForm(f => ({
           ...f,
           title: data.title || f.title,
           description: data.description || f.description,
           image_url: data.image || f.image_url,
           author: data.author || f.author,
-          tutorial_url: urlInput
+          tutorial_url: urlInput,
+          difficulty,
+          format,
+          category,
+          time_estimate: time
         }))
         setFetchMessage('Details imported! Check and edit below.')
       }
@@ -112,13 +137,38 @@ export default function Admin() {
       if (data.error) {
         setFetchMessage('Could not fetch: ' + data.error)
       } else {
+        const t = (data.title || '').toLowerCase()
+        const d = (data.description || '').toLowerCase()
+        const combined = t + ' ' + d
+
+        const difficulty = combined.includes('beginner') || combined.includes('easy') || combined.includes('simple') ? 'Beginner'
+          : combined.includes('advanced') || combined.includes('complex') || combined.includes('difficult') ? 'Advanced'
+          : 'Intermediate'
+
+        const format = urlInput.includes('youtube.com') || urlInput.includes('youtu.be') ? 'video' : 'pattern'
+
+        const category = combined.includes('hat') || combined.includes('beanie') || combined.includes('scarf') || combined.includes('bag') || combined.includes('purse') ? 'Accessories'
+          : combined.includes('blanket') || combined.includes('pillow') || combined.includes('coaster') || combined.includes('home') ? 'Home'
+          : combined.includes('amigurumi') || combined.includes('toy') || combined.includes('stuffed') || combined.includes('plush') ? 'Toys'
+          : combined.includes('top') || combined.includes('cardigan') || combined.includes('sweater') || combined.includes('dress') || combined.includes('shirt') ? 'Garments'
+          : combined.includes('baby') || combined.includes('newborn') || combined.includes('infant') ? 'Baby'
+          : 'Accessories'
+
+        const time = combined.includes('quick') || combined.includes('fast') || combined.includes('easy') || combined.includes('beginner') ? 'Under 2h'
+          : combined.includes('weekend') || combined.includes('hours') ? '2-5h'
+          : '2-5h'
+
         setForm(f => ({
           ...f,
           title: data.title || f.title,
           description: data.description || f.description,
           image_url: data.image || f.image_url,
           author: data.author || f.author,
-          tutorial_url: urlInput
+          tutorial_url: urlInput,
+          difficulty,
+          format,
+          category,
+          time_estimate: time
         }))
         setFetchMessage('Details imported! Check and edit below.')
       }
