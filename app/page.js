@@ -152,6 +152,7 @@ export default function Home() {
               {user ? (
                 <>
                   <a href="/saved" style={{ fontSize: 13, color: '#3C3489', fontWeight: 600, textDecoration: 'none', padding: '8px 14px', borderRadius: 20, border: '1.5px solid #ede9fe', background: 'white' }}>My patterns</a>
+                  <a href="/tracker" style={{ fontSize: 13, color: 'white', fontWeight: 600, textDecoration: 'none', padding: '8px 14px', borderRadius: 20, background: '#3C3489' }}>Tracker</a>
                   <button onClick={handleLogout} style={{ fontSize: 13, color: '#9ca3af', background: 'none', border: 'none', cursor: 'pointer', padding: '8px' }}>Log out</button>
                 </>
               ) : (

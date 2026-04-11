@@ -39,6 +39,11 @@ export default function Saved() {
     setExternal(data || [])
   }
 
+  async function updateProgress(id, progress) {
+    await supabase.from('saved_patterns').update({ progress }).eq('id', id)
+    setPatterns(patterns.map(p => p.id === id ? { ...p, progress } : p))
+  }
+
   async function unsave(patternId) {
     await supabase.from('saved_patterns').delete().eq('user_id', user.id).eq('pattern_id', patternId)
     setPatterns(patterns.filter(p => p.pattern_id !== patternId))
@@ -168,14 +173,24 @@ export default function Saved() {
                       </div>
                     )}
 
+                    <div style={{ marginBottom: 8 }}>
+                      <select value={s.progress || 'not_started'} onChange={e => updateProgress(s.id, e.target.value)}
+                        style={{ width: '100%', padding: '6px 10px', borderRadius: 8, border: '1.5px solid #ede9fe', fontSize: 12, fontWeight: 600, cursor: 'pointer', outline: 'none',
+                          background: s.progress === 'completed' ? '#e8f5e9' : s.progress === 'in_progress' ? '#fff8e1' : '#f5f5f5',
+                          color: s.progress === 'completed' ? '#2e7d32' : s.progress === 'in_progress' ? '#f57f17' : '#9e9e9e'
+                        }}>
+                        <option value="not_started">Not started</option>
+                        <option value="in_progress">In progress</option>
+                        <option value="completed">Completed</option>
+                      </select>
+                    </div>
                     <div style={{ display: 'flex', gap: 6 }}>
-                      <a href={'/pattern/' + s.patterns.id}
-                        style={{ flex: 1, display: 'block', textAlign: 'center', background: '#3C3489', color: 'white', padding: '8px', borderRadius: 10, fontSize: 12, fontWeight: 600, textDecoration: 'none' }}>
-                        Track progress
+                      <a href={'/tracker'} style={{ flex: 1, display: 'block', textAlign: 'center', background: '#3C3489', color: 'white', padding: '8px', borderRadius: 10, fontSize: 12, fontWeight: 600, textDecoration: 'none' }}>
+                        Track →
                       </a>
                       <a href={s.patterns.tutorial_url} target="_blank" rel="noopener noreferrer"
                         style={{ flex: 1, display: 'block', textAlign: 'center', background: 'white', color: '#3C3489', padding: '8px', borderRadius: 10, fontSize: 12, fontWeight: 600, textDecoration: 'none', border: '1px solid #3C3489' }}>
-                        View pattern
+                        View
                       </a>
                       <button onClick={() => unsave(s.pattern_id)}
                         style={{ padding: '8px 10px', borderRadius: 10, border: '1px solid #eee', background: 'white', color: '#999', fontSize: 12, cursor: 'pointer' }}>
