@@ -21,6 +21,8 @@ export default function Admin() {
   const [urlInput, setUrlInput] = useState('')
   const [fetching, setFetching] = useState(false)
   const [fetchMessage, setFetchMessage] = useState('')
+  const [importing, setImporting] = useState(false)
+  const [importMessage, setImportMessage] = useState('')
 
   async function fetchFromUrl() {
     if (!urlInput) return
@@ -52,10 +54,6 @@ export default function Admin() {
     setFetching(false)
   }
 
-  const [urlInput, setUrlInput] = useState('')
-  const [fetching, setFetching] = useState(false)
-  const [fetchMessage, setFetchMessage] = useState('')
-
   async function fetchFromUrl() {
     if (!urlInput) return
     setFetching(true)
@@ -86,7 +84,8 @@ export default function Admin() {
     setFetching(false)
   }
 
-  const [form, setForm] = useState(empty)
+
+    const [form, setForm] = useState(empty)
 
   useEffect(() => { fetchPatterns() }, [])
 
