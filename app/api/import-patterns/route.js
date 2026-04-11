@@ -36,11 +36,24 @@ export async function POST(request) {
       is_published: p.is_published === 'TRUE' || p.is_published === true || p.is_published === 'true'
     })).filter(p => p.title && p.tutorial_url)
 
-    const { data, error } = await supabase.from('patterns').insert(cleaned).select()
+    const urls = cleaned.map(p => p.tutorial_url)
+    const { data: existing } = await supabase
+      .from('patterns')
+      .select('tutorial_url')
+      .in('tutorial_url', urls)
 
+    const existingUrls = new Set((existing || []).map(p => p.tutorial_url))
+    const newPatterns = cleaned.filter(p => !existingUrls.has(p.tutorial_url))
+    const skipped = cleaned.length - newPatterns.length
+
+    if (!newPatterns.length) {
+      return NextResponse.json({ success: true, count: 0, skipped, message: 'All patterns already exist' })
+    }
+
+    const { data, error } = await supabase.from('patterns').insert(newPatterns).select()
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
-    return NextResponse.json({ success: true, count: data.length })
+    return NextResponse.json({ success: true, count: data.length, skipped })
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }

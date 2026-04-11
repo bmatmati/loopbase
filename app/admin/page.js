@@ -57,7 +57,9 @@ export default function Admin() {
       if (data.error) {
         setImportMessage('Error: ' + data.error)
       } else {
-        setImportMessage(data.count + ' patterns imported successfully!')
+        const msg = data.count + ' patterns imported!'
+        const skip = data.skipped ? ' ' + data.skipped + ' already existed and were skipped.' : ''
+        setImportMessage(msg + skip)
         fetchPatterns()
       }
     } catch(e) {
