@@ -159,6 +159,7 @@ export default function Admin() {
     }
     if (result.error) {
       setMessage('Error: ' + result.error.message)
+      console.error('Supabase error:', result.error)
     } else {
       setMessage(editingId ? 'Pattern updated!' : 'Pattern added!')
       setForm(empty)
@@ -170,7 +171,8 @@ export default function Admin() {
 
   async function handleDelete(id) {
     if (!confirm('Delete this pattern?')) return
-    await supabase.from('patterns').delete().eq('id', id)
+    const { error } = await supabase.from('patterns').delete().eq('id', id)
+    if (error) { alert('Delete error: ' + error.message); return }
     fetchPatterns()
   }
 
