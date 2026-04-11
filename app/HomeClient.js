@@ -226,8 +226,8 @@ export default function HomeClient({ initialPatterns = [], difficulty: initDiffi
             const level = levelColor(p.difficulty)
             const isHovered = hoveredCard === p.id
             return (
-              <div key={p.id} className="pattern-card"
-                style={{ animationDelay: i * 0.04 + 's', background: 'white', borderRadius: 18, overflow: 'hidden', border: '1.5px solid #ede9fe', transition: 'all 0.2s ease', boxShadow: isHovered ? '0 8px 32px rgba(60,52,137,0.12)' : '0 1px 4px rgba(60,52,137,0.06)', transform: isHovered ? 'translateY(-2px)' : 'none' }}
+              <a key={p.id} href={'/pattern/' + p.id} className="pattern-card"
+                style={{ animationDelay: i * 0.04 + 's', background: 'white', borderRadius: 18, overflow: 'hidden', border: '1.5px solid #ede9fe', transition: 'all 0.2s ease', boxShadow: isHovered ? '0 8px 32px rgba(60,52,137,0.12)' : '0 1px 4px rgba(60,52,137,0.06)', transform: isHovered ? 'translateY(-2px)' : 'none', textDecoration: 'none', color: 'inherit', display: 'block', cursor: 'pointer' }}
                 onMouseEnter={() => setHoveredCard(p.id)}
                 onMouseLeave={() => setHoveredCard(null)}>
 
@@ -274,7 +274,7 @@ export default function HomeClient({ initialPatterns = [], difficulty: initDiffi
 
 
                 </div>
-              </div>
+              </a>
             )
           })}
         </div>
