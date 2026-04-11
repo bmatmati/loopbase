@@ -279,6 +279,26 @@ export default function Home() {
         )}
       </div>
 
+      <footer style={{ borderTop: '1px solid #ede9fe', padding: '40px 24px', marginTop: 40, background: 'white' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 20, marginBottom: 24 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <img src="/logo.svg" alt="Loopbase" style={{ height: 32, width: 32, borderRadius: 8 }} />
+              <span style={{ fontSize: 18, fontWeight: 700, color: '#3C3489' }}>Loopbase</span>
+            </div>
+            <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
+              {[['About', '/about'], ['Privacy Policy', '/privacy'], ['Affiliate Disclosure', '/affiliate-disclosure'], ['Browser Extension', '/extension'], ['My Patterns', '/saved'], ['Tracker', '/tracker']].map(([label, href]) => (
+                <a key={href} href={href} style={{ fontSize: 13, color: '#6b7280', textDecoration: 'none' }}>{label}</a>
+              ))}
+            </div>
+          </div>
+          <div style={{ borderTop: '1px solid #f3f4f6', paddingTop: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+            <span style={{ fontSize: 12, color: '#9ca3af' }}>© {new Date().getFullYear()} Loopbase. Always free, forever.</span>
+            <span style={{ fontSize: 12, color: '#9ca3af' }}>Some links are affiliate links — we earn a small commission at no extra cost to you</span>
+          </div>
+        </div>
+      </footer>
+
       {selected && (
         <div onClick={() => setSelected(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(15,10,40,0.6)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24, backdropFilter: 'blur(4px)', animation: 'fadeIn 0.2s ease' }}>
           <div onClick={e => e.stopPropagation()} style={{ background: 'white', borderRadius: 24, maxWidth: 600, width: '100%', maxHeight: '92vh', overflowY: 'auto', position: 'relative', boxShadow: '0 24px 80px rgba(60,52,137,0.25)', animation: 'slideUp 0.25s ease' }}>
