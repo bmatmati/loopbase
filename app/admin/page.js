@@ -173,6 +173,7 @@ export default function Admin() {
       setMessage(editingId ? 'Pattern updated!' : 'Pattern added!')
       setForm(empty)
       setEditingId(null)
+      await new Promise(r => setTimeout(r, 300))
       fetchPatterns()
     }
     setLoading(false)
