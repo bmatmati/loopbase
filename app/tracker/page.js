@@ -104,8 +104,24 @@ export default function Tracker() {
             {s.stitch_count || 0} total stitches · {JSON.parse(s.row_log || '[]').length} rows logged
           </div>
 
-          <div style={{ marginTop: 24, background: 'rgba(255,255,255,0.1)', borderRadius: 14, padding: 16 }}>
-            <div style={{ fontSize: 12, color: '#C4BCE8', marginBottom: 8, fontWeight: 600 }}>My notes</div>
+          <div style={{ marginTop: 24, background: 'rgba(255,255,255,0.1)', borderRadius: 14, padding: 16, width: '100%' }}>
+            <div style={{ fontSize: 12, color: '#C4BCE8', marginBottom: 12, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Row history</div>
+            {JSON.parse(s.row_log || '[]').length === 0 ? (
+              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', textAlign: 'center', padding: '8px 0' }}>No rows completed yet</div>
+            ) : (
+              <div style={{ maxHeight: 200, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {JSON.parse(s.row_log || '[]').map((r, i) => (
+                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 12px', borderRadius: 8, background: 'rgba(255,255,255,0.08)' }}>
+                    <span style={{ fontSize: 13, color: '#C4BCE8', fontWeight: 600 }}>Row {r.row}</span>
+                    <span style={{ fontSize: 13, color: 'white', fontWeight: 700 }}>{r.stitches} stitches</span>
+                  </div>
+                )).reverse()}
+              </div>
+            )}
+          </div>
+
+          <div style={{ marginTop: 16, background: 'rgba(255,255,255,0.1)', borderRadius: 14, padding: 16, width: '100%' }}>
+            <div style={{ fontSize: 12, color: '#C4BCE8', marginBottom: 8, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>My notes</div>
             <div style={{ fontSize: 13, color: 'white', lineHeight: 1.6, textAlign: 'left' }}>
               {s.notes || 'No notes yet — add them on the pattern page'}
             </div>
