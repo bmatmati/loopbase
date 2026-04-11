@@ -26,17 +26,9 @@ export async function generateMetadata({ params }) {
   }
 }
 
-export async function generateStaticParams() {
-  const { createClient } = await import('@supabase/supabase-js')
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  )
-  const { data } = await supabase.from('patterns').select('id').eq('is_published', true)
-  return (data || []).map(p => ({ id: String(p.id) }))
-}
+export const dynamicParams = true
 
-export const revalidate = 3600
+export const revalidate = 60
 
 export default async function PatternDetail({ params }) {
   const { id } = await params
