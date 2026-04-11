@@ -240,7 +240,11 @@ export default function Home() {
                     />
                     : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 52 }}>🧶</div>
                   }
-                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.15) 100%)', pointerEvents: 'none' }} />
+                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.5) 100%)', pointerEvents: 'none' }} />
+                  <div style={{ position: 'absolute', bottom: 10, left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: 12, pointerEvents: 'none' }}>
+                    <span style={{ background: 'rgba(255,255,255,0.9)', color: '#333', fontSize: 10, fontWeight: 600, padding: '3px 8px', borderRadius: 20 }}>Click to open</span>
+                    <span style={{ background: 'rgba(255,255,255,0.9)', color: '#333', fontSize: 10, fontWeight: 600, padding: '3px 8px', borderRadius: 20 }}>Hold for details</span>
+                  </div>
                   <span style={{ position: 'absolute', top: 12, left: 12, padding: '4px 10px', borderRadius: 20, fontSize: 11, fontWeight: 700, letterSpacing: '0.03em', background: level.bg, color: level.color, border: '1px solid ' + level.border }}>
                     {p.difficulty}
                   </span>
@@ -259,9 +263,14 @@ export default function Home() {
                     ))}
                   </div>
 
-                  <button className="quick-btn" onClick={() => setSelected(p)} style={{ width: '100%', padding: '10px', borderRadius: 12, background: '#3C3489', color: 'white', border: 'none', fontSize: 13, fontWeight: 600, cursor: 'pointer', letterSpacing: '0.02em', transition: 'all 0.15s ease' }}>
-                    Quick view
-                  </button>
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <button onClick={() => window.open(p.tutorial_url, '_blank')} style={{ flex: 1, padding: '9px', borderRadius: 10, background: '#3C3489', color: 'white', border: 'none', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
+                      View pattern →
+                    </button>
+                    <button onClick={() => setSelected(p)} style={{ padding: '9px 12px', borderRadius: 10, background: '#f5f3ff', color: '#3C3489', border: '1.5px solid #ede9fe', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
+                      Quick view
+                    </button>
+                  </div>
                 </div>
               </div>
             )
