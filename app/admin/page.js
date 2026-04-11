@@ -28,9 +28,18 @@ export default function Admin() {
     setImporting(true)
     setImportMessage('')
     try {
-      const XLSX = await import('https://cdn.jsdelivr.net/npm/xlsx@0.18.5/+esm')
+      await new Promise((resolve, reject) => {
+        if (window.XLSX) { resolve(); return; }
+        const script = document.createElement('script')
+        script.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js'
+        script.onload = resolve
+        script.onerror = reject
+        document.head.appendChild(script)
+      })
+      const XLSX = window.XLSX
       const buffer = await file.arrayBuffer()
-      const wb = XLSX.read(buffer, { type: 'array' })
+      const uint8 = new Uint8Array(buffer)
+      const wb = XLSX.read(uint8, { type: 'array' })
       const ws = wb.Sheets[wb.SheetNames[0]]
       const rows = XLSX.utils.sheet_to_json(ws, { defval: '' })
       const filtered = rows.filter(r => r.title && r.tutorial_url)
