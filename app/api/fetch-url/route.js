@@ -10,15 +10,31 @@ export async function POST(request) {
     const isYouTube = url.includes('youtube.com') || url.includes('youtu.be')
 
     if (isYouTube) {
-      const oembedUrl = 'https://www.youtube.com/oembed?url=' + encodeURIComponent(url) + '&format=json'
-      const res = await fetch(oembedUrl)
-      if (res.ok) {
-        const data = await res.json()
-        title = data.title || ''
-        author = data.author_name || ''
-        const videoId = url.match(/(?:v=|youtu\.be\/)([^&\?]+)/)?.[1]
-        if (videoId) {
-          image = 'https://img.youtube.com/vi/' + videoId + '/maxresdefault.jpg'
+      const videoId = url.match(/(?:v=|youtu\.be\/)([^&\?]+)/)?.[1]
+      if (videoId) {
+        image = 'https://img.youtube.com/vi/' + videoId + '/maxresdefault.jpg'
+        const ytApiKey = process.env.YOUTUBE_API_KEY
+        if (ytApiKey) {
+          const ytRes = await fetch(
+            'https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' + videoId + '&key=' + ytApiKey
+          )
+          if (ytRes.ok) {
+            const ytData = await ytRes.json()
+            const snippet = ytData.items?.[0]?.snippet
+            if (snippet) {
+              title = snippet.title || ''
+              author = snippet.channelTitle || ''
+              description = (snippet.description || '').substring(0, 1000)
+            }
+          }
+        } else {
+          const oembedUrl = 'https://www.youtube.com/oembed?url=' + encodeURIComponent(url) + '&format=json'
+          const res = await fetch(oembedUrl)
+          if (res.ok) {
+            const data = await res.json()
+            title = data.title || ''
+            author = data.author_name || ''
+          }
         }
       }
     } else {
