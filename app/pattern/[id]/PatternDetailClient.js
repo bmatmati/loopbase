@@ -178,10 +178,24 @@ export default function PatternDetailClient({ initialPattern = null, patternId =
                 allowFullScreen
               />
             </div>
-          ) : pattern.image_url ? (
-            <img src={pattern.image_url} alt={pattern.title}
-              style={{ width: '100%', height: 320, objectFit: 'cover', borderRadius: 16, marginBottom: 20, display: 'block' }} />
-          ) : null}
+          ) : (
+            <a href={pattern.tutorial_url} target="_blank" rel="noopener noreferrer"
+              style={{ textDecoration: 'none', display: 'block', marginBottom: 20 }}>
+              <div style={{ background: 'white', borderRadius: 16, border: '1.5px solid #ede9fe', overflow: 'hidden', boxShadow: '0 2px 12px rgba(60,52,137,0.08)' }}>
+                {pattern.image_url && (
+                  <img src={pattern.image_url} alt={pattern.title}
+                    style={{ width: '100%', height: 280, objectFit: 'cover', display: 'block' }} />
+                )}
+                <div style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: '#111827', marginBottom: 2 }}>View free pattern</div>
+                    <div style={{ fontSize: 12, color: '#9ca3af' }}>{detectBrand(pattern.tutorial_url)} · Opens in new tab</div>
+                  </div>
+                  <span style={{ background: '#3C3489', color: 'white', padding: '8px 18px', borderRadius: 10, fontSize: 13, fontWeight: 700, flexShrink: 0 }}>Open →</span>
+                </div>
+              </div>
+            </a>
+          )}
 
           {pattern.description && (
             <p style={{ fontSize: 15, color: '#4b5563', lineHeight: 1.8, marginBottom: 20 }}>{pattern.description}</p>
@@ -246,25 +260,6 @@ export default function PatternDetailClient({ initialPattern = null, patternId =
                 )}
               </tbody></table>
             </div>
-          )}
-
-          {!videoId && (
-            <a href={pattern.tutorial_url} target="_blank" rel="noopener noreferrer"
-              style={{ textDecoration: 'none', display: 'block', marginBottom: 20 }}>
-              <div style={{ background: 'white', borderRadius: 16, border: '1.5px solid #ede9fe', overflow: 'hidden', boxShadow: '0 2px 12px rgba(60,52,137,0.08)', transition: 'box-shadow 0.2s' }}>
-                {pattern.image_url && (
-                  <img src={pattern.image_url} alt={pattern.title}
-                    style={{ width: '100%', height: 220, objectFit: 'cover', display: 'block' }} />
-                )}
-                <div style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: '#111827', marginBottom: 2 }}>View free pattern</div>
-                    <div style={{ fontSize: 12, color: '#9ca3af' }}>{detectBrand(pattern.tutorial_url)} · Opens in new tab</div>
-                  </div>
-                  <span style={{ background: '#3C3489', color: 'white', padding: '8px 18px', borderRadius: 10, fontSize: 13, fontWeight: 700, flexShrink: 0 }}>Open →</span>
-                </div>
-              </div>
-            </a>
           )}
         </div>
 
