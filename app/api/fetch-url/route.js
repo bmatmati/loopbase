@@ -12,7 +12,11 @@ export async function POST(request) {
     if (isYouTube) {
       const videoId = url.match(/(?:v=|youtu\.be\/)([^&\?]+)/)?.[1]
       if (videoId) {
-        image = 'https://img.youtube.com/vi/' + videoId + '/maxresdefault.jpg'
+        // Try maxres first, fall back to hqdefault
+        const maxres = 'https://img.youtube.com/vi/' + videoId + '/maxresdefault.jpg'
+        const hq = 'https://img.youtube.com/vi/' + videoId + '/hqdefault.jpg'
+        const checkImg = await fetch(maxres, { method: 'HEAD' })
+        image = (checkImg.ok && checkImg.headers.get('content-length') !== '1403') ? maxres : hq
         const ytApiKey = process.env.YOUTUBE_API_KEY
         if (ytApiKey) {
           const ytRes = await fetch(
