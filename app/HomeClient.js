@@ -194,7 +194,10 @@ export default function HomeClient({ initialPatterns = [], difficulty: initDiffi
               {chip('Pattern', format === 'pattern', () => setFormat(format === 'pattern' ? null : 'pattern'))}
               {chip('Video', format === 'video', () => setFormat(format === 'video' ? null : 'video'))}
               {chip('Both', format === 'both', () => setFormat(format === 'both' ? null : 'both'))}
-              <span style={{ fontSize: 11, fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em', whiteSpace: 'nowrap', marginLeft: 8 }}>Category</span>
+            </div>
+            <div style={{ width: 1, background: '#e5e7eb', margin: '4px 8px' }} />
+            <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+              <span style={{ fontSize: 11, fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>Category</span>
               {chip('All', !category, () => setCategory(null))}
               {chip('Accessories', category === 'Accessories', () => setCategory(category === 'Accessories' ? null : 'Accessories'))}
               {chip('Garments', category === 'Garments', () => setCategory(category === 'Garments' ? null : 'Garments'))}
@@ -202,12 +205,6 @@ export default function HomeClient({ initialPatterns = [], difficulty: initDiffi
               {chip('Home', category === 'Home', () => setCategory(category === 'Home' ? null : 'Home'))}
               {chip('Baby', category === 'Baby', () => setCategory(category === 'Baby' ? null : 'Baby'))}
               {chip('Other', category === 'Other', () => setCategory(category === 'Other' ? null : 'Other'))}
-              {chip('Accessories', category === 'Accessories', () => setCategory(category === 'Accessories' ? null : 'Accessories'))}
-              {chip('Garments', category === 'Garments', () => setCategory(category === 'Garments' ? null : 'Garments'))}
-              {chip('Toys', category === 'Toys', () => setCategory(category === 'Toys' ? null : 'Toys'))}
-              {chip('Home', category === 'Home', () => setCategory(category === 'Home' ? null : 'Home'))}
-              {chip('Baby', category === 'Baby', () => setCategory(category === 'Baby' ? null : 'Baby'))}
-              {chip('Other', category === 'Other', () => setCategory(category === 'Other' ? null : 'Other'))}}
             </div>
           </div>
         </div>
