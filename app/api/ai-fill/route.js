@@ -2,14 +2,31 @@ import { NextResponse } from 'next/server'
 
 export async function POST(request) {
   try {
-    const { title, description, url, author } = await request.json()
+    const { title, description, url, author, products } = await request.json()
 
-    const prompt = `You are helping to catalog a free crochet pattern. Based on the information below, fill in the missing details.
+    const yarnProducts = (products || []).filter(p => p.type === 'yarn')
+    const hookProducts = (products || []).filter(p => p.type === 'hook')
+
+    const yarnLibrary = yarnProducts.length > 0
+      ? `\nYarn affiliate library (pick the best match):\n${yarnProducts.map(p =>
+          `- ${p.name} | Weight: ${p.yarn_weight || '?'} | Type: ${p.yarn_type || '?'} | Price: ${p.price || '?'} | URL: ${p.affiliate_url}`
+        ).join('\n')}`
+      : '\nNo yarn products in affiliate library yet.'
+
+    const hookLibrary = hookProducts.length > 0
+      ? `\nHook affiliate library (pick the best match):\n${hookProducts.map(p =>
+          `- ${p.name} | Size: ${p.hook_size || '?'} | Price: ${p.price || '?'} | URL: ${p.affiliate_url}`
+        ).join('\n')}`
+      : '\nNo hook products in affiliate library yet.'
+
+    const prompt = `You are helping to catalog a free crochet pattern. Based on the information below, fill in the missing details AND pick the best matching yarn and hook from the affiliate libraries provided.
 
 Pattern title: ${title}
 Author: ${author}
 Description: ${description}
 URL: ${url}
+${yarnLibrary}
+${hookLibrary}
 
 Please respond with ONLY a JSON object (no markdown, no explanation) with these exact fields:
 {
@@ -20,14 +37,21 @@ Please respond with ONLY a JSON object (no markdown, no explanation) with these 
   "tags": "5-8 comma separated tags e.g. beginner, quick make, gift idea, summer, amigurumi",
   "difficulty": "Beginner or Intermediate or Advanced",
   "time_estimate": "Under 2h or 2-5h or 5h+",
-  "category": "Accessories or Home or Toys or Garments or Baby or Other"
+  "category": "Accessories or Home or Toys or Garments or Baby or Other",
+  "yarn_affiliate": "the affiliate_url of the best matching yarn from the library, or empty string if none match",
+  "yarn_name": "the name of the best matching yarn from the library, or your best guess if library is empty",
+  "yarn_price": "the price of the best matching yarn from the library, or empty string if none match",
+  "yarn_image_url": "the image_url of the best matching yarn from the library, or empty string if none match",
+  "hook_affiliate": "the affiliate_url of the best matching hook from the library, or empty string if none match",
+  "hook_name": "the name of the best matching hook from the library, or your best guess if library is empty",
+  "hook_price": "the price of the best matching hook from the library, or empty string if none match",
+  "hook_image_url": "the image_url of the best matching hook from the library, or empty string if none match"
 }
 
-Base your answers on the pattern title and description. For example:
-- Amigurumi patterns typically use 3-4mm hooks and DK/Sport weight cotton or acrylic
-- Blankets typically use 5-8mm hooks and chunky/aran weight yarn
-- Garments vary widely but often use DK or Aran weight
-- Baby items typically use soft acrylic or cotton`
+Matching rules:
+- For yarn: match based on yarn_weight and yarn_type. e.g. an amigurumi pattern needs DK/Sport cotton, a basket needs T-shirt yarn, a blanket needs Chunky/Aran
+- For hooks: match based on hook_size. e.g. if the pattern needs a 5mm hook, pick the hook that covers 5mm
+- If nothing in the library matches well, return empty string for affiliate fields but still fill in the text fields with your best guess`
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -38,18 +62,25 @@ Base your answers on the pattern title and description. For example:
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: 500,
+        max_tokens: 800,
         messages: [{ role: 'user', content: prompt }]
       })
     })
 
     const data = await response.json()
+
+    if (!response.ok) {
+      console.error('Anthropic API error:', data)
+      return NextResponse.json({ error: data.error?.message || 'Anthropic API error' }, { status: 500 })
+    }
+
     const text = data.content?.[0]?.text || '{}'
     const clean = text.replace(/```json|```/g, '').trim()
     const parsed = JSON.parse(clean)
 
     return NextResponse.json(parsed)
   } catch (error) {
+    console.error('ai-fill error:', error)
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }

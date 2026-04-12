@@ -29,11 +29,12 @@ export default function Admin() {
     }
     setAiFilling(true)
     setAiMessage('')
+    console.log('AI fill triggered for:', form.title, form.tutorial_url)
     try {
       const res = await fetch('/api/ai-fill', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: form.title, description: form.description, url: form.tutorial_url, author: form.author })
+        body: JSON.stringify({ title: form.title, description: form.description, url: form.tutorial_url, author: form.author, products: affiliateProducts })
       })
       const data = await res.json()
       if (data.error) {
