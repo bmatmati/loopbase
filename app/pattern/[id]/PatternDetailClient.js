@@ -316,4 +316,4 @@ export default function PatternDetailClient({ initialPattern = null, patternId =
       </div>
     </div>
   )
-}
+} 
