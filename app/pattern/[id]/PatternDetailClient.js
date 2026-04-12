@@ -167,62 +167,73 @@ export default function PatternDetailClient({ initialPattern = null, patternId =
           <p style={{ fontSize: 15, color: '#4b5563', lineHeight: 1.8, marginBottom: 24 }}>{pattern.description}</p>
         )}
 
-        {/* Details table */}
+        {/* Integrated details + affiliate table */}
         {[pattern.hook_size, pattern.yarn_weight, pattern.yarn_type, pattern.tags].some(Boolean) && (
           <div style={{ background: 'white', borderRadius: 16, border: '1.5px solid #ede9fe', overflow: 'hidden', marginBottom: 24 }}>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}><tbody>
-              {[
-                pattern.hook_size && ['🪝 Hook size', pattern.hook_size],
-                pattern.yarn_weight && ['🧶 Yarn weight', pattern.yarn_weight],
-                pattern.yarn_type && ['✨ Yarn type', pattern.yarn_type],
-                pattern.tags && ['🏷️ Tags', pattern.tags],
-              ].filter(Boolean).map(([label, value], i, arr) => (
-                <tr key={label} style={{ borderBottom: i < arr.length - 1 ? '1px solid #f3f4f6' : 'none' }}>
-                  <td style={{ padding: '12px 18px', fontSize: 13, color: '#9ca3af', width: 140, fontWeight: 500 }}>{label}</td>
-                  <td style={{ padding: '12px 18px', fontSize: 14, color: '#111827', fontWeight: 600 }}>{value}</td>
+              {pattern.hook_size && (
+                <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
+                  <td style={{ padding: '12px 18px', fontSize: 13, color: '#9ca3af', width: 130, fontWeight: 500 }}>🪝 Hook size</td>
+                  <td style={{ padding: '12px 18px', fontSize: 14, color: '#111827', fontWeight: 600 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <span>{pattern.hook_size}</span>
+                      {pattern.hook_affiliate && (
+                        <a href={pattern.hook_affiliate} target="_blank" rel="noopener noreferrer"
+                          style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', background: '#f5f3ff', border: '1.5px solid #ede9fe', borderRadius: 8, padding: '5px 10px' }}>
+                          {pattern.hook_image_url && <img src={pattern.hook_image_url} alt="hook" style={{ width: 24, height: 24, objectFit: 'cover', borderRadius: 4 }} />}
+                          <div>
+                            <div style={{ fontSize: 11, fontWeight: 600, color: '#3C3489' }}>{pattern.hook_name || 'Shop hook'}</div>
+                            {pattern.hook_price && <div style={{ fontSize: 10, color: '#9ca3af' }}>{pattern.hook_price}</div>}
+                          </div>
+                          <span style={{ fontSize: 11, color: '#3C3489', fontWeight: 700 }}>→</span>
+                        </a>
+                      )}
+                    </div>
+                  </td>
                 </tr>
-              ))}
+              )}
+              {pattern.yarn_weight && (
+                <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
+                  <td style={{ padding: '12px 18px', fontSize: 13, color: '#9ca3af', width: 130, fontWeight: 500 }}>🧶 Yarn weight</td>
+                  <td style={{ padding: '12px 18px', fontSize: 14, color: '#111827', fontWeight: 600 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <span>{pattern.yarn_weight}</span>
+                      {pattern.yarn_affiliate && (
+                        <a href={pattern.yarn_affiliate} target="_blank" rel="noopener noreferrer"
+                          style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', background: '#f5f3ff', border: '1.5px solid #ede9fe', borderRadius: 8, padding: '5px 10px' }}>
+                          {pattern.yarn_image_url && <img src={pattern.yarn_image_url} alt="yarn" style={{ width: 24, height: 24, objectFit: 'cover', borderRadius: 4 }} />}
+                          <div>
+                            <div style={{ fontSize: 11, fontWeight: 600, color: '#3C3489' }}>{pattern.yarn_name || 'Shop yarn'}</div>
+                            {pattern.yarn_price && <div style={{ fontSize: 10, color: '#9ca3af' }}>{pattern.yarn_price}</div>}
+                          </div>
+                          <span style={{ fontSize: 11, color: '#3C3489', fontWeight: 700 }}>→</span>
+                        </a>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              )}
+              {pattern.yarn_type && (
+                <tr style={{ borderBottom: pattern.tags ? '1px solid #f3f4f6' : 'none' }}>
+                  <td style={{ padding: '12px 18px', fontSize: 13, color: '#9ca3af', width: 130, fontWeight: 500 }}>✨ Yarn type</td>
+                  <td style={{ padding: '12px 18px', fontSize: 14, color: '#111827', fontWeight: 600 }}>{pattern.yarn_type}</td>
+                </tr>
+              )}
+              {pattern.tags && (
+                <tr>
+                  <td style={{ padding: '12px 18px', fontSize: 13, color: '#9ca3af', width: 130, fontWeight: 500 }}>🏷️ Tags</td>
+                  <td style={{ padding: '12px 18px', fontSize: 14, color: '#111827', fontWeight: 600 }}>{pattern.tags}</td>
+                </tr>
+              )}
             </tbody></table>
           </div>
         )}
 
         {/* View pattern button */}
         <a href={pattern.tutorial_url} target="_blank" rel="noopener noreferrer"
-          style={{ display: 'block', textAlign: 'center', background: '#3C3489', color: 'white', padding: '15px', borderRadius: 14, fontSize: 16, fontWeight: 700, textDecoration: 'none', marginBottom: 24, boxShadow: '0 4px 14px rgba(60,52,137,0.25)' }}>
+          style={{ display: 'block', textAlign: 'center', background: '#3C3489', color: 'white', padding: '15px', borderRadius: 14, fontSize: 16, fontWeight: 700, textDecoration: 'none', marginBottom: 32, boxShadow: '0 4px 14px rgba(60,52,137,0.25)' }}>
           View free pattern →
         </a>
-
-        {/* Shop supplies */}
-        {(pattern.yarn_affiliate || pattern.hook_affiliate) && (
-          <div style={{ background: 'white', borderRadius: 16, padding: 20, border: '1.5px solid #ede9fe', marginBottom: 32, boxShadow: '0 1px 4px rgba(60,52,137,0.06)' }}>
-            <h3 style={{ fontSize: 14, fontWeight: 700, marginBottom: 4, color: '#111827' }}>Shop supplies</h3>
-            <p style={{ fontSize: 12, color: '#9ca3af', marginBottom: 14 }}>Affiliate links — small commission at no extra cost to you</p>
-            {pattern.yarn_affiliate && (
-              <a href={pattern.yarn_affiliate} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', display: 'block', marginBottom: 10 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px', borderRadius: 12, border: '1.5px solid #ede9fe', background: '#faf9ff', transition: 'border-color 0.2s' }}>
-                  {pattern.yarn_image_url && <img src={pattern.yarn_image_url} alt="yarn" style={{ width: 44, height: 44, objectFit: 'cover', borderRadius: 8, flexShrink: 0 }} />}
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: '#111827' }}>{pattern.yarn_name || 'Recommended yarn'}</div>
-                    <div style={{ fontSize: 12, color: '#9ca3af' }}>{detectBrand(pattern.yarn_affiliate)}{pattern.yarn_price ? ' · ' + pattern.yarn_price : ''}</div>
-                  </div>
-                  <span style={{ background: '#3C3489', color: 'white', padding: '7px 14px', borderRadius: 8, fontSize: 12, fontWeight: 600, flexShrink: 0 }}>Shop yarn</span>
-                </div>
-              </a>
-            )}
-            {pattern.hook_affiliate && (
-              <a href={pattern.hook_affiliate} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', display: 'block' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px', borderRadius: 12, border: '1.5px solid #ede9fe', background: '#faf9ff' }}>
-                  {pattern.hook_image_url && <img src={pattern.hook_image_url} alt="hook" style={{ width: 44, height: 44, objectFit: 'cover', borderRadius: 8, flexShrink: 0 }} />}
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: '#111827' }}>{pattern.hook_name || 'Recommended hook'}</div>
-                    <div style={{ fontSize: 12, color: '#9ca3af' }}>{detectBrand(pattern.hook_affiliate)}{pattern.hook_price ? ' · ' + pattern.hook_price : ''}</div>
-                  </div>
-                  <span style={{ background: '#3C3489', color: 'white', padding: '7px 14px', borderRadius: 8, fontSize: 12, fontWeight: 600, flexShrink: 0 }}>Shop hook</span>
-                </div>
-              </a>
-            )}
-          </div>
-        )}
       </div>
 
       {/* TRACKER SECTION */}
