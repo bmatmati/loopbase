@@ -225,22 +225,23 @@ export default function PatternDetailClient({ initialPattern = null, patternId =
         )}
       </div>
 
-      {/* TRACKER SECTION — dark purple, full width */}
-      <div style={{ background: '#3C3489', padding: '40px 24px 60px' }}>
+      {/* TRACKER SECTION */}
+      <div style={{ background: '#f8f7ff', padding: '40px 24px 60px', borderTop: '1px solid #ede9fe' }}>
         <div style={{ maxWidth: 800, margin: '0 auto' }}>
 
-          <h2 style={{ fontSize: 18, fontWeight: 700, color: 'white', marginBottom: 6, letterSpacing: '-0.3px' }}>Track your progress</h2>
-          <p style={{ fontSize: 13, color: '#C4BCE8', marginBottom: 28 }}>Log your rows and stitches as you go</p>
+          <h2 style={{ fontSize: 18, fontWeight: 700, color: '#111827', marginBottom: 6, letterSpacing: '-0.3px' }}>Track your progress</h2>
+          <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 28 }}>Log your rows and stitches as you go</p>
 
           {/* Progress status */}
-          <div style={{ background: 'rgba(255,255,255,0.1)', borderRadius: 16, padding: 20, marginBottom: 16 }}>
-            <div style={{ fontSize: 12, fontWeight: 600, color: '#C4BCE8', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 12 }}>Progress status</div>
+          <div style={{ background: 'white', borderRadius: 16, padding: 20, marginBottom: 16, border: '1.5px solid #ede9fe' }}>
+            <div style={{ fontSize: 12, fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 12 }}>Progress status</div>
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
               {progressOptions.map(opt => (
                 <button key={opt.value} onClick={() => setProgress(opt.value)} style={{
-                  padding: '8px 16px', borderRadius: 20, border: progress === opt.value ? '2px solid white' : '2px solid rgba(255,255,255,0.2)',
-                  background: progress === opt.value ? 'white' : 'transparent',
-                  color: progress === opt.value ? '#3C3489' : 'white',
+                  padding: '8px 16px', borderRadius: 20,
+                  border: progress === opt.value ? '2px solid ' + opt.color : '1.5px solid #e5e7eb',
+                  background: progress === opt.value ? opt.bg : 'white',
+                  color: progress === opt.value ? opt.color : '#6b7280',
                   fontWeight: progress === opt.value ? 700 : 400,
                   fontSize: 13, cursor: 'pointer'
                 }}>
@@ -250,8 +251,8 @@ export default function PatternDetailClient({ initialPattern = null, patternId =
             </div>
           </div>
 
-          {/* Stitch tracker */}
-          <div style={{ background: 'rgba(255,255,255,0.1)', borderRadius: 16, padding: 24, marginBottom: 16 }}>
+          {/* Stitch tracker card — purple */}
+          <div style={{ background: '#3C3489', borderRadius: 16, padding: 24, marginBottom: 16 }}>
             <div style={{ fontSize: 12, fontWeight: 600, color: '#C4BCE8', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 20 }}>Stitch tracker</div>
 
             {/* Stats */}
@@ -307,28 +308,27 @@ export default function PatternDetailClient({ initialPattern = null, patternId =
           </div>
 
           {/* Notes */}
-          <div style={{ background: 'rgba(255,255,255,0.1)', borderRadius: 16, padding: 20, marginBottom: 16 }}>
-            <div style={{ fontSize: 12, fontWeight: 600, color: '#C4BCE8', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 12 }}>My notes</div>
+          <div style={{ background: 'white', borderRadius: 16, padding: 20, marginBottom: 16, border: '1.5px solid #ede9fe' }}>
+            <div style={{ fontSize: 12, fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 12 }}>My notes</div>
             <textarea value={notes} onChange={e => setNotes(e.target.value)}
               placeholder="e.g. Use 5mm hook, rows 1-10 done, need more yarn..."
-              style={{ width: '100%', height: 120, padding: '12px 14px', borderRadius: 12, border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(255,255,255,0.08)', fontSize: 13, outline: 'none', resize: 'none', fontFamily: 'inherit', boxSizing: 'border-box', lineHeight: 1.7, color: 'white' }} />
+              style={{ width: '100%', height: 120, padding: '12px 14px', borderRadius: 12, border: '1.5px solid #ede9fe', background: '#faf9ff', fontSize: 13, outline: 'none', resize: 'none', fontFamily: 'inherit', boxSizing: 'border-box', lineHeight: 1.7, color: '#374151' }} />
           </div>
 
-          {/* Save button */}
           {message && (
-            <div style={{ background: 'rgba(255,255,255,0.15)', color: 'white', padding: '10px 14px', borderRadius: 10, fontSize: 13, fontWeight: 600, textAlign: 'center', marginBottom: 12 }}>
+            <div style={{ background: '#e8f5e9', color: '#2e7d32', padding: '10px 14px', borderRadius: 10, fontSize: 13, fontWeight: 600, textAlign: 'center', marginBottom: 12 }}>
               {message}
             </div>
           )}
 
           <button onClick={saveTracker} disabled={saving}
-            style={{ width: '100%', padding: '15px', borderRadius: 14, border: 'none', background: 'white', color: '#3C3489', fontSize: 16, fontWeight: 700, cursor: 'pointer', boxShadow: '0 4px 14px rgba(0,0,0,0.2)' }}>
+            style={{ width: '100%', padding: '15px', borderRadius: 14, border: 'none', background: '#3C3489', color: 'white', fontSize: 16, fontWeight: 700, cursor: 'pointer', boxShadow: '0 4px 14px rgba(60,52,137,0.25)' }}>
             {saving ? 'Saving...' : saved ? 'Update my progress' : 'Save to my patterns'}
           </button>
 
           {!user && (
-            <p style={{ fontSize: 12, color: '#C4BCE8', textAlign: 'center', marginTop: 12 }}>
-              <a href="/login" style={{ color: 'white', fontWeight: 600 }}>Log in</a> to save your progress
+            <p style={{ fontSize: 12, color: '#9ca3af', textAlign: 'center', marginTop: 12 }}>
+              <a href="/login" style={{ color: '#3C3489', fontWeight: 600 }}>Log in</a> to save your progress
             </p>
           )}
 
