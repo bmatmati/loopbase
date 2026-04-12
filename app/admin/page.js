@@ -283,8 +283,10 @@ export default function Admin() {
 
   async function handleDelete(id) {
     if (!confirm('Delete this pattern?')) return
-    const { error } = await supabase.from('patterns').delete().eq('id', id)
+    const { data, error } = await supabase.from('patterns').delete().eq('id', id).select()
+    console.log('Delete result:', data, error)
     if (error) { alert('Delete error: ' + error.message); return }
+    if (!data || data.length === 0) { alert('Delete failed - check Supabase RLS policies'); return }
     setPatterns(prev => prev.filter(p => p.id !== id))
   }
 
