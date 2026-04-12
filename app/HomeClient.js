@@ -49,7 +49,7 @@ export default function HomeClient({ initialPatterns = [], difficulty: initDiffi
   }, [])
 
   async function fetchPatterns() {
-    let query = supabase.from('patterns').select('*').eq('is_published', true)
+    let query = supabase.from("patterns").select("*").eq("is_published", true).order("created_at", { ascending: false })
     if (difficulty) query = query.eq('difficulty', difficulty)
     if (time) query = query.eq('time_estimate', time)
     if (format) {
