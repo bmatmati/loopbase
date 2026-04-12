@@ -19,6 +19,44 @@ export default function Admin() {
   }
 
   const [urlInput, setUrlInput] = useState('')
+  const [aiFilling, setAiFilling] = useState(false)
+  const [aiMessage, setAiMessage] = useState('')
+
+  async function handleAiFill() {
+    if (!form.title && !form.tutorial_url) {
+      setAiMessage('Please import a URL first or enter a title')
+      return
+    }
+    setAiFilling(true)
+    setAiMessage('')
+    try {
+      const res = await fetch('/api/ai-fill', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: form.title, description: form.description, url: form.tutorial_url, author: form.author })
+      })
+      const data = await res.json()
+      if (data.error) {
+        setAiMessage('Error: ' + data.error)
+      } else {
+        setForm(f => ({
+          ...f,
+          description: data.description || f.description,
+          hook_size: data.hook_size || f.hook_size,
+          yarn_weight: data.yarn_weight || f.yarn_weight,
+          yarn_type: data.yarn_type || f.yarn_type,
+          tags: data.tags || f.tags,
+          difficulty: data.difficulty || f.difficulty,
+          time_estimate: data.time_estimate || f.time_estimate,
+          category: data.category || f.category,
+        }))
+        setAiMessage('AI filled in the details! Check and adjust if needed.')
+      }
+    } catch(e) {
+      setAiMessage('Failed: ' + e.message)
+    }
+    setAiFilling(false)
+  }
   const [fetching, setFetching] = useState(false)
   const [fetchMessage, setFetchMessage] = useState('')
   const [importing, setImporting] = useState(false)
@@ -372,6 +410,14 @@ export default function Admin() {
               style={{ width: '100%', height: 120, objectFit: 'cover', borderRadius: 8, marginBottom: 14 }} />
           )}
 
+          <div style={{ marginBottom: 16, background: '#f0f7ff', borderRadius: 12, padding: 16, border: '1.5px solid #bdd7f5' }}>
+            <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#1565c0', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.06em' }}>AI auto-fill</label>
+            <p style={{ fontSize: 12, color: '#1976d2', marginBottom: 10 }}>Let AI fill in description, hook size, yarn weight, tags and more automatically</p>
+            <button onClick={handleAiFill} disabled={aiFilling} style={{ padding: '9px 18px', borderRadius: 8, border: 'none', background: '#1565c0', color: 'white', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
+              {aiFilling ? 'AI is thinking...' : 'Auto-fill with AI'}
+            </button>
+            {aiMessage && <p style={{ fontSize: 12, marginTop: 8, color: aiMessage.includes('Error') || aiMessage.includes('Failed') ? '#c62828' : '#1565c0', fontWeight: 600 }}>{aiMessage}</p>}
+          </div>
           {inp('Description', 'description', 'One sentence about this pattern')}
           {inp('Yarn affiliate link', 'yarn_affiliate', 'https://...')}
           {inp('Yarn product name', 'yarn_name', 'e.g. Hobbii Rainbow Cotton')}
