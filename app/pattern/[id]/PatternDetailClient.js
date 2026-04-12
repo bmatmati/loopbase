@@ -240,8 +240,8 @@ export default function PatternDetailClient({ initialPattern = null, patternId =
       <div style={{ background: '#f8f7ff', padding: '40px 24px 60px', borderTop: '1px solid #ede9fe' }}>
         <div style={{ maxWidth: 800, margin: '0 auto' }}>
 
-          <h2 style={{ fontSize: 18, fontWeight: 700, color: '#111827', marginBottom: 6, letterSpacing: '-0.3px' }}>Track your progress</h2>
-          <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 28 }}>Log your rows and stitches as you go</p>
+          <h2 style={{ fontSize: 28, fontWeight: 700, color: '#111827', marginBottom: 6, letterSpacing: '-0.5px' }}>Track your progress</h2>
+          <p style={{ fontSize: 14, color: '#9ca3af', marginBottom: 28 }}>Log your rows and stitches as you go</p>
 
           {/* Progress status */}
           <div style={{ background: 'white', borderRadius: 16, padding: 20, marginBottom: 16, border: '1.5px solid #ede9fe' }}>
