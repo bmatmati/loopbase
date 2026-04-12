@@ -263,10 +263,7 @@ export default function HomeClient({ initialPatterns = [], difficulty: initDiffi
                     : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 52 }}>🧶</div>
                   }
                   <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.5) 100%)', pointerEvents: 'none' }} />
-                  <div style={{ position: 'absolute', bottom: 14, left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: 10, pointerEvents: 'none' }}>
-                    <span style={{ background: 'rgba(255,255,255,0.92)', color: '#3C3489', fontSize: 11, fontWeight: 700, padding: '5px 14px', borderRadius: 20, backdropFilter: 'blur(4px)', letterSpacing: '0.02em' }}>Click to open</span>
-                    <span style={{ background: 'rgba(60,52,137,0.85)', color: 'white', fontSize: 11, fontWeight: 700, padding: '5px 14px', borderRadius: 20, backdropFilter: 'blur(4px)', letterSpacing: '0.02em' }}>Hold for details</span>
-                  </div>
+
                   <span style={{ position: 'absolute', top: 12, left: 12, padding: '4px 10px', borderRadius: 20, fontSize: 11, fontWeight: 700, letterSpacing: '0.03em', background: level.bg, color: level.color, border: '1px solid ' + level.border }}>
                     {p.difficulty}
                   </span>
