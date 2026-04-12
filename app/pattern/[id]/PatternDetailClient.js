@@ -250,8 +250,20 @@ export default function PatternDetailClient({ initialPattern = null, patternId =
 
           {!videoId && (
             <a href={pattern.tutorial_url} target="_blank" rel="noopener noreferrer"
-              style={{ display: 'block', textAlign: 'center', background: '#3C3489', color: 'white', padding: '14px', borderRadius: 14, fontSize: 15, fontWeight: 700, textDecoration: 'none', marginBottom: 20, boxShadow: '0 4px 14px rgba(60,52,137,0.25)' }}>
-              View free pattern →
+              style={{ textDecoration: 'none', display: 'block', marginBottom: 20 }}>
+              <div style={{ background: 'white', borderRadius: 16, border: '1.5px solid #ede9fe', overflow: 'hidden', boxShadow: '0 2px 12px rgba(60,52,137,0.08)', transition: 'box-shadow 0.2s' }}>
+                {pattern.image_url && (
+                  <img src={pattern.image_url} alt={pattern.title}
+                    style={{ width: '100%', height: 220, objectFit: 'cover', display: 'block' }} />
+                )}
+                <div style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: '#111827', marginBottom: 2 }}>View free pattern</div>
+                    <div style={{ fontSize: 12, color: '#9ca3af' }}>{detectBrand(pattern.tutorial_url)} · Opens in new tab</div>
+                  </div>
+                  <span style={{ background: '#3C3489', color: 'white', padding: '8px 18px', borderRadius: 10, fontSize: 13, fontWeight: 700, flexShrink: 0 }}>Open →</span>
+                </div>
+              </div>
             </a>
           )}
         </div>
@@ -329,13 +341,6 @@ export default function PatternDetailClient({ initialPattern = null, patternId =
             )}
           </div>
 
-          <div style={{ background: 'white', borderRadius: 16, padding: 18, border: '1.5px solid #ede9fe' }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>My notes</div>
-            <textarea value={notes} onChange={e => setNotes(e.target.value)}
-              placeholder="e.g. Use 5mm hook, rows 1-10 done..."
-              style={{ width: '100%', height: 100, padding: '10px 12px', borderRadius: 10, border: '1.5px solid #ede9fe', background: '#faf9ff', fontSize: 13, outline: 'none', resize: 'none', fontFamily: 'inherit', boxSizing: 'border-box', lineHeight: 1.6, color: '#374151' }} />
-          </div>
-
           {message && (
             <div style={{ background: '#e8f5e9', color: '#2e7d32', padding: '10px 14px', borderRadius: 10, fontSize: 13, fontWeight: 600, textAlign: 'center' }}>
               {message}
@@ -351,6 +356,23 @@ export default function PatternDetailClient({ initialPattern = null, patternId =
             <p style={{ fontSize: 12, color: '#9ca3af', textAlign: 'center', margin: 0 }}>
               <a href="/login" style={{ color: '#3C3489', fontWeight: 600 }}>Log in</a> to save your progress
             </p>
+          )}
+        </div>
+      </div>
+
+      {/* FULL WIDTH NOTES CARD */}
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px 40px' }}>
+        <div style={{ background: 'white', borderRadius: 16, padding: 24, border: '1.5px solid #ede9fe' }}>
+          <div style={{ fontSize: 16, fontWeight: 700, color: '#111827', marginBottom: 4 }}>📝 My notes</div>
+          <p style={{ fontSize: 13, color: '#9ca3af', marginBottom: 16 }}>Jot down your stitch count, colour choices, modifications...</p>
+          <textarea value={notes} onChange={e => setNotes(e.target.value)}
+            placeholder="e.g. Used 5mm hook, made rows 1-10 in pink, switched to cream for rows 11-20, need to buy more yarn..."
+            style={{ width: '100%', minHeight: 160, padding: '14px 16px', borderRadius: 12, border: '1.5px solid #ede9fe', background: '#faf9ff', fontSize: 14, outline: 'none', resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box', lineHeight: 1.7, color: '#374151' }} />
+          {notes && (
+            <div style={{ marginTop: 16, padding: '14px 16px', borderRadius: 12, background: '#f5f3ff', border: '1px solid #ede9fe' }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>Saved notes</div>
+              <p style={{ fontSize: 14, color: '#374151', lineHeight: 1.7, margin: 0, whiteSpace: 'pre-wrap' }}>{notes}</p>
+            </div>
           )}
         </div>
       </div>
