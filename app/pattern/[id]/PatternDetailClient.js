@@ -324,7 +324,6 @@ export default function PatternDetailClient({ initialPattern = null, patternId =
     </div>
   )
 }
-ENDOFFILEcat > ~/loopbase/app/pattern/\[id\]/PatternDetailClient.js << 'ENDOFFILE'
 'use client'
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
