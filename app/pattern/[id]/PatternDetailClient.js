@@ -147,7 +147,7 @@ export default function PatternDetailClient({ initialPattern = null, patternId =
       </div>
 
       {/* PATTERN DETAILS — full width on top */}
-      <div style={{ maxWidth: 800, margin: '0 auto', padding: '32px 24px 0' }}>
+      <div style={{ maxWidth: 800, margin: '0 auto', padding: '32px 24px 24px' }}>
 
         {pattern.image_url && (
           <img src={pattern.image_url} alt={pattern.title}
@@ -237,7 +237,7 @@ export default function PatternDetailClient({ initialPattern = null, patternId =
       </div>
 
       {/* TRACKER SECTION */}
-      <div style={{ background: '#f8f7ff', padding: '40px 24px 60px', borderTop: '1px solid #ede9fe' }}>
+      <div style={{ background: '#f8f7ff', padding: '24px 24px 48px', borderTop: '1px solid #ede9fe' }}>
         <div style={{ maxWidth: 800, margin: '0 auto' }}>
 
           <h2 style={{ fontSize: 28, fontWeight: 700, color: '#111827', marginBottom: 6, letterSpacing: '-0.5px' }}>Track your progress</h2>
