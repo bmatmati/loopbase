@@ -14,6 +14,12 @@ function detectBrand(url) {
   return 'Online retailer'
 }
 
+function getYouTubeId(url) {
+  if (!url) return null
+  const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/)
+  return match ? match[1] : null
+}
+
 export default function PatternDetailClient({ initialPattern = null, patternId = null }) {
   const params = useParams()
   const id = patternId || params.id
@@ -132,110 +138,39 @@ export default function PatternDetailClient({ initialPattern = null, patternId =
     </div>
   )
 
+  const videoId = getYouTubeId(pattern.tutorial_url)
+
   return (
     <div style={{ minHeight: '100vh', background: '#f8f7ff', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
 
-      {/* HEADER */}
-      <div style={{ background: 'white', borderBottom: '1px solid #ede9fe', padding: '14px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 1px 12px rgba(60,52,137,0.06)' }}>
-        <a href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 20, fontWeight: 700, color: '#3C3489' }}>Loopbase</span>
+      {/* STICKY HEADER */}
+      <div style={{ background: 'white', borderBottom: '1px solid #ede9fe', padding: '12px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 1px 12px rgba(60,52,137,0.06)', position: 'sticky', top: 0, zIndex: 20 }}>
+        <a href="/" style={{ textDecoration: 'none' }}>
+          <span style={{ fontSize: 18, fontWeight: 700, color: '#3C3489' }}>Loopbase</span>
         </a>
-        <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-          {user && <a href="/saved" style={{ fontSize: 13, color: '#6b7280', textDecoration: 'none', padding: '7px 14px', borderRadius: 20, border: '1.5px solid #e5e7eb' }}>My patterns</a>}
-          <a href="/" style={{ fontSize: 13, color: '#6b7280', textDecoration: 'none', padding: '7px 14px', borderRadius: 20, border: '1.5px solid #e5e7eb' }}>Back to browse</a>
+        <div style={{ flex: 1, margin: '0 20px', minWidth: 0 }}>
+          <div style={{ fontSize: 14, fontWeight: 600, color: '#111827', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{pattern.title}</div>
+          <div style={{ fontSize: 12, color: '#9ca3af' }}>by {pattern.author}</div>
+        </div>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0 }}>
+          {user && <a href="/saved" style={{ fontSize: 13, color: '#6b7280', textDecoration: 'none', padding: '6px 12px', borderRadius: 20, border: '1.5px solid #e5e7eb' }}>My patterns</a>}
+          <a href="/" style={{ fontSize: 13, color: '#6b7280', textDecoration: 'none', padding: '6px 12px', borderRadius: 20, border: '1.5px solid #e5e7eb' }}>← Browse</a>
         </div>
       </div>
 
-      {/* PATTERN DETAILS — full width on top */}
-      <div style={{ maxWidth: 800, margin: '0 auto', padding: '32px 24px 24px' }}>
+      {/* SPLIT LAYOUT */}
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '20px 24px', display: 'grid', gridTemplateColumns: '1fr 380px', gap: 20, alignItems: 'start' }}>
 
-        {pattern.image_url && (
-          <img src={pattern.image_url} alt={pattern.title}
-            style={{ width: '100%', height: 340, objectFit: 'cover', borderRadius: 20, marginBottom: 24, display: 'block' }} />
-        )}
-
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 14 }}>
-          <span style={{ padding: '4px 14px', borderRadius: 20, fontSize: 13, fontWeight: 600, ...levelColor(pattern.difficulty) }}>{pattern.difficulty}</span>
-          <span style={{ background: '#ede9fe', color: '#5b21b6', padding: '4px 14px', borderRadius: 20, fontSize: 13, fontWeight: 500 }}>{pattern.time_estimate}</span>
-          <span style={{ background: '#f0ede8', color: '#666', padding: '4px 14px', borderRadius: 20, fontSize: 13 }}>{pattern.category}</span>
-        </div>
-
-        <h1 style={{ fontSize: 28, fontWeight: 700, color: '#111827', marginBottom: 6, letterSpacing: '-0.5px' }}>{pattern.title}</h1>
-        <p style={{ fontSize: 14, color: '#9ca3af', marginBottom: 16 }}>by {pattern.author}</p>
-
-        {pattern.description && (
-          <p style={{ fontSize: 15, color: '#4b5563', lineHeight: 1.8, marginBottom: 24 }}>{pattern.description}</p>
-        )}
-
-        {/* Integrated details + affiliate table */}
-        {[pattern.hook_size, pattern.yarn_weight, pattern.yarn_type, pattern.tags].some(Boolean) && (
-          <div style={{ background: 'white', borderRadius: 16, border: '1.5px solid #ede9fe', overflow: 'hidden', marginBottom: 24 }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}><tbody>
-              {pattern.hook_size && (
-                <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
-                  <td style={{ padding: '12px 18px', fontSize: 13, color: '#9ca3af', width: 130, fontWeight: 500 }}>🪝 Hook size</td>
-                  <td style={{ padding: '12px 18px', fontSize: 14, color: '#111827', fontWeight: 600 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <span>{pattern.hook_size}</span>
-                      {pattern.hook_affiliate && (
-                        <a href={pattern.hook_affiliate} target="_blank" rel="noopener noreferrer"
-                          style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', background: '#f5f3ff', border: '1.5px solid #ede9fe', borderRadius: 8, padding: '5px 10px' }}>
-                          {pattern.hook_image_url && <img src={pattern.hook_image_url} alt="hook" style={{ width: 24, height: 24, objectFit: 'cover', borderRadius: 4 }} />}
-                          <div>
-                            <div style={{ fontSize: 11, fontWeight: 600, color: '#3C3489' }}>{pattern.hook_name || 'Shop hook'}</div>
-                            {pattern.hook_price && <div style={{ fontSize: 10, color: '#9ca3af' }}>{pattern.hook_price}</div>}
-                          </div>
-                          <span style={{ fontSize: 11, color: '#3C3489', fontWeight: 700 }}>→</span>
-                        </a>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              )}
-              {pattern.yarn_weight && (
-                <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
-                  <td style={{ padding: '12px 18px', fontSize: 13, color: '#9ca3af', width: 130, fontWeight: 500 }}>🧶 Yarn weight</td>
-                  <td style={{ padding: '12px 18px', fontSize: 14, color: '#111827', fontWeight: 600 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <span>{pattern.yarn_weight}</span>
-                      {pattern.yarn_affiliate && (
-                        <a href={pattern.yarn_affiliate} target="_blank" rel="noopener noreferrer"
-                          style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', background: '#f5f3ff', border: '1.5px solid #ede9fe', borderRadius: 8, padding: '5px 10px' }}>
-                          {pattern.yarn_image_url && <img src={pattern.yarn_image_url} alt="yarn" style={{ width: 24, height: 24, objectFit: 'cover', borderRadius: 4 }} />}
-                          <div>
-                            <div style={{ fontSize: 11, fontWeight: 600, color: '#3C3489' }}>{pattern.yarn_name || 'Shop yarn'}</div>
-                            {pattern.yarn_price && <div style={{ fontSize: 10, color: '#9ca3af' }}>{pattern.yarn_price}</div>}
-                          </div>
-                          <span style={{ fontSize: 11, color: '#3C3489', fontWeight: 700 }}>→</span>
-                        </a>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              )}
-              {pattern.yarn_type && (
-                <tr style={{ borderBottom: pattern.tags ? '1px solid #f3f4f6' : 'none' }}>
-                  <td style={{ padding: '12px 18px', fontSize: 13, color: '#9ca3af', width: 130, fontWeight: 500 }}>✨ Yarn type</td>
-                  <td style={{ padding: '12px 18px', fontSize: 14, color: '#111827', fontWeight: 600 }}>{pattern.yarn_type}</td>
-                </tr>
-              )}
-              {pattern.tags && (
-                <tr>
-                  <td style={{ padding: '12px 18px', fontSize: 13, color: '#9ca3af', width: 130, fontWeight: 500 }}>🏷️ Tags</td>
-                  <td style={{ padding: '12px 18px', fontSize: 14, color: '#111827', fontWeight: 600 }}>{pattern.tags}</td>
-                </tr>
-              )}
-            </tbody></table>
+        {/* LEFT — Video + Details */}
+        <div>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 12 }}>
+            <span style={{ padding: '4px 12px', borderRadius: 20, fontSize: 12, fontWeight: 600, ...levelColor(pattern.difficulty) }}>{pattern.difficulty}</span>
+            <span style={{ background: '#ede9fe', color: '#5b21b6', padding: '4px 12px', borderRadius: 20, fontSize: 12, fontWeight: 500 }}>{pattern.time_estimate}</span>
+            <span style={{ background: '#f0ede8', color: '#666', padding: '4px 12px', borderRadius: 20, fontSize: 12 }}>{pattern.category}</span>
           </div>
-        )}
 
-        {/* View pattern button */}
-        {(() => {
-          const url = pattern.tutorial_url || ''
-          const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/)
-          const videoId = ytMatch ? ytMatch[1] : null
-          return videoId ? (
-            <div style={{ borderRadius: 16, overflow: 'hidden', marginBottom: 24, aspectRatio: '16/9', background: '#000' }}>
+          {videoId ? (
+            <div style={{ borderRadius: 16, overflow: 'hidden', marginBottom: 20, background: '#000', aspectRatio: '16/9' }}>
               <iframe
                 src={`https://www.youtube.com/embed/${videoId}`}
                 style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
@@ -243,34 +178,98 @@ export default function PatternDetailClient({ initialPattern = null, patternId =
                 allowFullScreen
               />
             </div>
-          ) : (
+          ) : pattern.image_url ? (
+            <img src={pattern.image_url} alt={pattern.title}
+              style={{ width: '100%', height: 320, objectFit: 'cover', borderRadius: 16, marginBottom: 20, display: 'block' }} />
+          ) : null}
+
+          {pattern.description && (
+            <p style={{ fontSize: 15, color: '#4b5563', lineHeight: 1.8, marginBottom: 20 }}>{pattern.description}</p>
+          )}
+
+          {[pattern.hook_size, pattern.yarn_weight, pattern.yarn_type, pattern.tags].some(Boolean) && (
+            <div style={{ background: 'white', borderRadius: 16, border: '1.5px solid #ede9fe', overflow: 'hidden', marginBottom: 20 }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}><tbody>
+                {pattern.hook_size && (
+                  <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
+                    <td style={{ padding: '12px 18px', fontSize: 13, color: '#9ca3af', width: 130, fontWeight: 500 }}>🪝 Hook size</td>
+                    <td style={{ padding: '12px 18px', fontSize: 14, color: '#111827', fontWeight: 600 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <span>{pattern.hook_size}</span>
+                        {pattern.hook_affiliate && (
+                          <a href={pattern.hook_affiliate} target="_blank" rel="noopener noreferrer"
+                            style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', background: '#f5f3ff', border: '1.5px solid #ede9fe', borderRadius: 8, padding: '5px 10px' }}>
+                            {pattern.hook_image_url && <img src={pattern.hook_image_url} alt="hook" style={{ width: 24, height: 24, objectFit: 'cover', borderRadius: 4 }} />}
+                            <div>
+                              <div style={{ fontSize: 11, fontWeight: 600, color: '#3C3489' }}>{pattern.hook_name || 'Shop hook'}</div>
+                              {pattern.hook_price && <div style={{ fontSize: 10, color: '#9ca3af' }}>{pattern.hook_price}</div>}
+                            </div>
+                            <span style={{ fontSize: 11, color: '#3C3489', fontWeight: 700 }}>→</span>
+                          </a>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                )}
+                {pattern.yarn_weight && (
+                  <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
+                    <td style={{ padding: '12px 18px', fontSize: 13, color: '#9ca3af', width: 130, fontWeight: 500 }}>🧶 Yarn weight</td>
+                    <td style={{ padding: '12px 18px', fontSize: 14, color: '#111827', fontWeight: 600 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <span>{pattern.yarn_weight}</span>
+                        {pattern.yarn_affiliate && (
+                          <a href={pattern.yarn_affiliate} target="_blank" rel="noopener noreferrer"
+                            style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', background: '#f5f3ff', border: '1.5px solid #ede9fe', borderRadius: 8, padding: '5px 10px' }}>
+                            {pattern.yarn_image_url && <img src={pattern.yarn_image_url} alt="yarn" style={{ width: 24, height: 24, objectFit: 'cover', borderRadius: 4 }} />}
+                            <div>
+                              <div style={{ fontSize: 11, fontWeight: 600, color: '#3C3489' }}>{pattern.yarn_name || 'Shop yarn'}</div>
+                              {pattern.yarn_price && <div style={{ fontSize: 10, color: '#9ca3af' }}>{pattern.yarn_price}</div>}
+                            </div>
+                            <span style={{ fontSize: 11, color: '#3C3489', fontWeight: 700 }}>→</span>
+                          </a>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                )}
+                {pattern.yarn_type && (
+                  <tr style={{ borderBottom: pattern.tags ? '1px solid #f3f4f6' : 'none' }}>
+                    <td style={{ padding: '12px 18px', fontSize: 13, color: '#9ca3af', width: 130, fontWeight: 500 }}>✨ Yarn type</td>
+                    <td style={{ padding: '12px 18px', fontSize: 14, color: '#111827', fontWeight: 600 }}>{pattern.yarn_type}</td>
+                  </tr>
+                )}
+                {pattern.tags && (
+                  <tr>
+                    <td style={{ padding: '12px 18px', fontSize: 13, color: '#9ca3af', width: 130, fontWeight: 500 }}>🏷️ Tags</td>
+                    <td style={{ padding: '12px 18px', fontSize: 14, color: '#111827', fontWeight: 600 }}>{pattern.tags}</td>
+                  </tr>
+                )}
+              </tbody></table>
+            </div>
+          )}
+
+          {!videoId && (
             <a href={pattern.tutorial_url} target="_blank" rel="noopener noreferrer"
-              style={{ display: 'block', textAlign: 'center', background: '#3C3489', color: 'white', padding: '15px', borderRadius: 14, fontSize: 16, fontWeight: 700, textDecoration: 'none', marginBottom: 32, boxShadow: '0 4px 14px rgba(60,52,137,0.25)' }}>
+              style={{ display: 'block', textAlign: 'center', background: '#3C3489', color: 'white', padding: '14px', borderRadius: 14, fontSize: 15, fontWeight: 700, textDecoration: 'none', marginBottom: 20, boxShadow: '0 4px 14px rgba(60,52,137,0.25)' }}>
               View free pattern →
             </a>
-          )
-        })()}
-      </div>
+          )}
+        </div>
 
-      {/* TRACKER SECTION */}
-      <div style={{ background: '#f8f7ff', padding: '24px 24px 48px', borderTop: '1px solid #ede9fe' }}>
-        <div style={{ maxWidth: 800, margin: '0 auto' }}>
+        {/* RIGHT — Sticky tracker */}
+        <div style={{ position: 'sticky', top: 72, maxHeight: 'calc(100vh - 92px)', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 12, paddingBottom: 20 }}>
 
-          <h2 style={{ fontSize: 28, fontWeight: 700, color: '#111827', marginBottom: 6, letterSpacing: '-0.5px' }}>Track your progress</h2>
-          <p style={{ fontSize: 14, color: '#9ca3af', marginBottom: 28 }}>Log your rows and stitches as you go</p>
-
-          {/* Progress status */}
-          <div style={{ background: 'white', borderRadius: 16, padding: 20, marginBottom: 16, border: '1.5px solid #ede9fe' }}>
-            <div style={{ fontSize: 12, fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 12 }}>Progress status</div>
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <div style={{ background: 'white', borderRadius: 16, padding: 18, border: '1.5px solid #ede9fe' }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>Progress</div>
+            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
               {progressOptions.map(opt => (
                 <button key={opt.value} onClick={() => setProgress(opt.value)} style={{
-                  padding: '8px 16px', borderRadius: 20,
+                  padding: '7px 14px', borderRadius: 20, fontSize: 12,
                   border: progress === opt.value ? '2px solid ' + opt.color : '1.5px solid #e5e7eb',
                   background: progress === opt.value ? opt.bg : 'white',
                   color: progress === opt.value ? opt.color : '#6b7280',
                   fontWeight: progress === opt.value ? 700 : 400,
-                  fontSize: 13, cursor: 'pointer'
+                  cursor: 'pointer'
                 }}>
                   {progress === opt.value ? '● ' : '○ '}{opt.label}
                 </button>
@@ -278,55 +277,51 @@ export default function PatternDetailClient({ initialPattern = null, patternId =
             </div>
           </div>
 
-          {/* Stitch tracker card — purple */}
-          <div style={{ background: '#3C3489', borderRadius: 16, padding: 24, marginBottom: 16 }}>
-            <div style={{ fontSize: 12, fontWeight: 600, color: '#C4BCE8', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 20 }}>Stitch tracker</div>
+          <div style={{ background: '#3C3489', borderRadius: 16, padding: 20 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: '#C4BCE8', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16 }}>Stitch tracker</div>
 
-            {/* Stats */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 24 }}>
-              <div style={{ background: 'rgba(255,255,255,0.12)', borderRadius: 12, padding: '16px', textAlign: 'center' }}>
-                <div style={{ fontSize: 36, fontWeight: 700, color: 'white', lineHeight: 1 }}>{currentRow}</div>
-                <div style={{ fontSize: 12, color: '#C4BCE8', marginTop: 4 }}>Current row</div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 20 }}>
+              <div style={{ background: 'rgba(255,255,255,0.12)', borderRadius: 12, padding: 14, textAlign: 'center' }}>
+                <div style={{ fontSize: 32, fontWeight: 700, color: 'white', lineHeight: 1 }}>{currentRow}</div>
+                <div style={{ fontSize: 11, color: '#C4BCE8', marginTop: 4 }}>Current row</div>
               </div>
-              <div style={{ background: 'rgba(255,255,255,0.12)', borderRadius: 12, padding: '16px', textAlign: 'center' }}>
-                <div style={{ fontSize: 36, fontWeight: 700, color: 'white', lineHeight: 1 }}>{totalStitches}</div>
-                <div style={{ fontSize: 12, color: '#C4BCE8', marginTop: 4 }}>Total stitches</div>
+              <div style={{ background: 'rgba(255,255,255,0.12)', borderRadius: 12, padding: 14, textAlign: 'center' }}>
+                <div style={{ fontSize: 32, fontWeight: 700, color: 'white', lineHeight: 1 }}>{totalStitches}</div>
+                <div style={{ fontSize: 11, color: '#C4BCE8', marginTop: 4 }}>Total stitches</div>
               </div>
             </div>
 
-            {/* Stitch counter */}
-            <div style={{ marginBottom: 20, textAlign: 'center' }}>
-              <div style={{ fontSize: 13, color: '#C4BCE8', marginBottom: 16, fontWeight: 500 }}>Stitches in row {currentRow}</div>
-              <div style={{ fontSize: 72, fontWeight: 700, color: 'white', lineHeight: 1, marginBottom: 20 }}>{stitchesThisRow}</div>
-              <div style={{ display: 'flex', gap: 20, justifyContent: 'center' }}>
+            <div style={{ textAlign: 'center', marginBottom: 16 }}>
+              <div style={{ fontSize: 12, color: '#C4BCE8', marginBottom: 12 }}>Stitches in row {currentRow}</div>
+              <div style={{ fontSize: 64, fontWeight: 700, color: 'white', lineHeight: 1, marginBottom: 16 }}>{stitchesThisRow}</div>
+              <div style={{ display: 'flex', gap: 16, justifyContent: 'center' }}>
                 <button onClick={() => setStitchesThisRow(Math.max(0, stitchesThisRow - 1))}
-                  style={{ width: 60, height: 60, borderRadius: '50%', border: '2px solid rgba(255,255,255,0.3)', background: 'transparent', color: 'white', fontSize: 28, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
+                  style={{ width: 52, height: 52, borderRadius: '50%', border: '2px solid rgba(255,255,255,0.3)', background: 'transparent', color: 'white', fontSize: 24, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
                 <button onClick={() => setStitchesThisRow(stitchesThisRow + 1)}
-                  style={{ width: 60, height: 60, borderRadius: '50%', border: 'none', background: 'white', color: '#3C3489', fontSize: 28, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
+                  style={{ width: 52, height: 52, borderRadius: '50%', border: 'none', background: 'white', color: '#3C3489', fontSize: 24, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
               </div>
             </div>
 
             <button onClick={completeRow}
-              style={{ width: '100%', padding: '13px', borderRadius: 12, border: '2px solid rgba(255,255,255,0.3)', background: 'transparent', color: 'white', fontSize: 15, fontWeight: 700, cursor: 'pointer', marginBottom: 10 }}>
+              style={{ width: '100%', padding: '12px', borderRadius: 12, border: '2px solid rgba(255,255,255,0.3)', background: 'transparent', color: 'white', fontSize: 14, fontWeight: 700, cursor: 'pointer', marginBottom: 8 }}>
               Complete row {currentRow} →
             </button>
 
             {rowLog.length > 0 && (
               <button onClick={undoLastRow}
-                style={{ width: '100%', padding: '10px', borderRadius: 12, border: '1px solid rgba(255,255,255,0.15)', background: 'transparent', color: 'rgba(255,255,255,0.6)', fontSize: 13, cursor: 'pointer', marginBottom: 16 }}>
+                style={{ width: '100%', padding: '8px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.15)', background: 'transparent', color: 'rgba(255,255,255,0.6)', fontSize: 12, cursor: 'pointer', marginBottom: 12 }}>
                 Undo last row
               </button>
             )}
 
-            {/* Row history */}
             {rowLog.length > 0 && (
-              <div style={{ background: 'rgba(255,255,255,0.08)', borderRadius: 12, padding: 16 }}>
-                <div style={{ fontSize: 12, color: '#C4BCE8', marginBottom: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Row history</div>
-                <div style={{ maxHeight: 180, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <div style={{ background: 'rgba(255,255,255,0.08)', borderRadius: 10, padding: 12 }}>
+                <div style={{ fontSize: 11, color: '#C4BCE8', marginBottom: 8, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Row history</div>
+                <div style={{ maxHeight: 140, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 4 }}>
                   {[...rowLog].reverse().map((r, i) => (
-                    <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 12px', borderRadius: 8, background: 'rgba(255,255,255,0.06)' }}>
-                      <span style={{ fontSize: 13, color: '#C4BCE8', fontWeight: 600 }}>Row {r.row}</span>
-                      <span style={{ fontSize: 13, color: 'white', fontWeight: 700 }}>{r.stitches} stitches</span>
+                    <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 10px', borderRadius: 6, background: 'rgba(255,255,255,0.06)' }}>
+                      <span style={{ fontSize: 12, color: '#C4BCE8', fontWeight: 600 }}>Row {r.row}</span>
+                      <span style={{ fontSize: 12, color: 'white', fontWeight: 700 }}>{r.stitches} sts</span>
                     </div>
                   ))}
                 </div>
@@ -334,31 +329,29 @@ export default function PatternDetailClient({ initialPattern = null, patternId =
             )}
           </div>
 
-          {/* Notes */}
-          <div style={{ background: 'white', borderRadius: 16, padding: 20, marginBottom: 16, border: '1.5px solid #ede9fe' }}>
-            <div style={{ fontSize: 12, fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 12 }}>My notes</div>
+          <div style={{ background: 'white', borderRadius: 16, padding: 18, border: '1.5px solid #ede9fe' }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>My notes</div>
             <textarea value={notes} onChange={e => setNotes(e.target.value)}
-              placeholder="e.g. Use 5mm hook, rows 1-10 done, need more yarn..."
-              style={{ width: '100%', height: 120, padding: '12px 14px', borderRadius: 12, border: '1.5px solid #ede9fe', background: '#faf9ff', fontSize: 13, outline: 'none', resize: 'none', fontFamily: 'inherit', boxSizing: 'border-box', lineHeight: 1.7, color: '#374151' }} />
+              placeholder="e.g. Use 5mm hook, rows 1-10 done..."
+              style={{ width: '100%', height: 100, padding: '10px 12px', borderRadius: 10, border: '1.5px solid #ede9fe', background: '#faf9ff', fontSize: 13, outline: 'none', resize: 'none', fontFamily: 'inherit', boxSizing: 'border-box', lineHeight: 1.6, color: '#374151' }} />
           </div>
 
           {message && (
-            <div style={{ background: '#e8f5e9', color: '#2e7d32', padding: '10px 14px', borderRadius: 10, fontSize: 13, fontWeight: 600, textAlign: 'center', marginBottom: 12 }}>
+            <div style={{ background: '#e8f5e9', color: '#2e7d32', padding: '10px 14px', borderRadius: 10, fontSize: 13, fontWeight: 600, textAlign: 'center' }}>
               {message}
             </div>
           )}
 
           <button onClick={saveTracker} disabled={saving}
-            style={{ width: '100%', padding: '15px', borderRadius: 14, border: 'none', background: '#3C3489', color: 'white', fontSize: 16, fontWeight: 700, cursor: 'pointer', boxShadow: '0 4px 14px rgba(60,52,137,0.25)' }}>
+            style={{ width: '100%', padding: '14px', borderRadius: 14, border: 'none', background: '#3C3489', color: 'white', fontSize: 15, fontWeight: 700, cursor: 'pointer', boxShadow: '0 4px 14px rgba(60,52,137,0.25)' }}>
             {saving ? 'Saving...' : saved ? 'Update my progress' : 'Save to my patterns'}
           </button>
 
           {!user && (
-            <p style={{ fontSize: 12, color: '#9ca3af', textAlign: 'center', marginTop: 12 }}>
+            <p style={{ fontSize: 12, color: '#9ca3af', textAlign: 'center', margin: 0 }}>
               <a href="/login" style={{ color: '#3C3489', fontWeight: 600 }}>Log in</a> to save your progress
             </p>
           )}
-
         </div>
       </div>
     </div>
