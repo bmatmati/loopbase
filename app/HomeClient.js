@@ -248,7 +248,7 @@ export default function HomeClient({ initialPatterns = [], difficulty: initDiffi
                   {p.image_url
                     ? <img src={p.image_url} alt={p.title} className="card-img"
                       style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.4s ease', cursor: 'pointer' }}
-                      onClick={() => window.open(p.tutorial_url, '_blank')}
+                      onClick={() => window.location.href = '/pattern/' + p.id}
                       onMouseDown={e => {
                         if (e.button !== 0) return
                         const timer = setTimeout(() => { window.location.href = '/pattern/' + p.id }, 600)
@@ -351,9 +351,7 @@ export default function HomeClient({ initialPatterns = [], difficulty: initDiffi
                 <a href={'/pattern/' + selected.id} style={{ flex: 1, display: 'block', textAlign: 'center', background: '#3C3489', color: 'white', padding: '12px', borderRadius: 12, fontSize: 14, fontWeight: 700, textDecoration: 'none', letterSpacing: '0.02em' }}>
                   Track progress
                 </a>
-                <a href={selected.tutorial_url} target="_blank" rel="noopener noreferrer" style={{ flex: 1, display: 'block', textAlign: 'center', background: '#f5f3ff', color: '#3C3489', padding: '12px', borderRadius: 12, fontSize: 14, fontWeight: 700, textDecoration: 'none', border: '1.5px solid #ede9fe', letterSpacing: '0.02em' }}>
-                  View pattern →
-                </a>
+
               </div>
 
               {(selected.yarn_affiliate || selected.hook_affiliate) && (
