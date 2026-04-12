@@ -184,7 +184,7 @@ export default function PatternDetailClient({ initialPattern = null, patternId =
               <div style={{ background: 'white', borderRadius: 16, border: '1.5px solid #ede9fe', overflow: 'hidden', boxShadow: '0 2px 12px rgba(60,52,137,0.08)' }}>
                 {pattern.image_url && (
                   <img src={pattern.image_url} alt={pattern.title}
-                    style={{ width: '100%', height: 280, objectFit: 'cover', display: 'block' }} />
+                    style={{ width: '100%', maxHeight: 500, objectFit: 'contain', display: 'block', background: '#f8f7ff' }} />
                 )}
                 <div style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <div>
