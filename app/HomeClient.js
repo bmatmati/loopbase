@@ -247,8 +247,11 @@ export default function HomeClient({ initialPatterns = [], difficulty: initDiffi
             <strong>New!</strong> Save any crochet pattern from anywhere with our browser extension
           </span>
         </div>
-        <a href="/extension" style={{ fontSize: 12, fontWeight: 600, color: '#6d28d9', textDecoration: 'none', background: 'white', padding: '5px 14px', borderRadius: 20, border: '1px solid #c4b5fd', whiteSpace: 'nowrap' }}>Get it free</a>
-      </div>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <a href="/extension" style={{ fontSize: 12, fontWeight: 600, color: '#6d28d9', textDecoration: 'none', background: 'white', padding: '5px 14px', borderRadius: 20, border: '1px solid #c4b5fd', whiteSpace: 'nowrap' }}>Get it free</a>
+          <button onClick={() => setShowBanner(false)} style={{ background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer', fontSize: 16, padding: '0 4px' }}>✕</button>
+        </div>
+      </div>}
 
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '28px 24px' }}>
 
