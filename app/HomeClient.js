@@ -214,40 +214,45 @@ export default function HomeClient({ initialPatterns = [], difficulty: initDiffi
                 </button>
               </div>
             </div>
-          {showFilters && <div className="filter-scroll" style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-              <span style={{ fontSize: 11, fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>Level</span>
-              {chip('All', !difficulty, () => { setDifficulty(null); updateUrl('difficulty', null) })}
-              {chip('Beginner', difficulty === 'Beginner', () => { const v = difficulty === 'Beginner' ? null : 'Beginner'; setDifficulty(v); updateUrl('difficulty', v) })}
-              {chip('Intermediate', difficulty === 'Intermediate', () => { const v = difficulty === 'Intermediate' ? null : 'Intermediate'; setDifficulty(v); updateUrl('difficulty', v) })}
-              {chip('Advanced', difficulty === 'Advanced', () => { const v = difficulty === 'Advanced' ? null : 'Advanced'; setDifficulty(v); updateUrl('difficulty', v) })}
+          {showFilters && <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 14 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em', width: 70, flexShrink: 0 }}>Level</span>
+              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                {chip('All', !difficulty, () => { setDifficulty(null); updateUrl('difficulty', null) })}
+                {chip('Beginner', difficulty === 'Beginner', () => { const v = difficulty === 'Beginner' ? null : 'Beginner'; setDifficulty(v); updateUrl('difficulty', v) })}
+                {chip('Intermediate', difficulty === 'Intermediate', () => { const v = difficulty === 'Intermediate' ? null : 'Intermediate'; setDifficulty(v); updateUrl('difficulty', v) })}
+                {chip('Advanced', difficulty === 'Advanced', () => { const v = difficulty === 'Advanced' ? null : 'Advanced'; setDifficulty(v); updateUrl('difficulty', v) })}
+              </div>
             </div>
-            <div style={{ width: 1, background: '#e5e7eb', margin: '4px 8px' }} />
-            <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-              <span style={{ fontSize: 11, fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>Time</span>
-              {chip('Any', !time, () => setTime(null))}
-              {chip('Under 2h', time === 'Under 2h', () => setTime(time === 'Under 2h' ? null : 'Under 2h'))}
-              {chip('2-5h', time === '2-5h', () => setTime(time === '2-5h' ? null : '2-5h'))}
-              {chip('5h+', time === '5h+', () => setTime(time === '5h+' ? null : '5h+'))}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em', width: 70, flexShrink: 0 }}>Time</span>
+              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                {chip('Any', !time, () => setTime(null))}
+                {chip('Under 2h', time === 'Under 2h', () => setTime(time === 'Under 2h' ? null : 'Under 2h'))}
+                {chip('2-5h', time === '2-5h', () => setTime(time === '2-5h' ? null : '2-5h'))}
+                {chip('5h+', time === '5h+', () => setTime(time === '5h+' ? null : '5h+'))}
+              </div>
             </div>
-            <div style={{ width: 1, background: '#e5e7eb', margin: '4px 8px' }} />
-            <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-              <span style={{ fontSize: 11, fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>Format</span>
-              {chip('Any', !format, () => setFormat(null))}
-              {chip('Pattern', format === 'pattern', () => setFormat(format === 'pattern' ? null : 'pattern'))}
-              {chip('Video', format === 'video', () => setFormat(format === 'video' ? null : 'video'))}
-              {chip('Both', format === 'both', () => setFormat(format === 'both' ? null : 'both'))}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em', width: 70, flexShrink: 0 }}>Format</span>
+              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                {chip('Any', !format, () => setFormat(null))}
+                {chip('Pattern', format === 'pattern', () => setFormat(format === 'pattern' ? null : 'pattern'))}
+                {chip('Video', format === 'video', () => setFormat(format === 'video' ? null : 'video'))}
+                {chip('Both', format === 'both', () => setFormat(format === 'both' ? null : 'both'))}
+              </div>
             </div>
-            <div style={{ width: 1, background: '#e5e7eb', margin: '4px 8px' }} />
-            <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-              <span style={{ fontSize: 11, fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>Category</span>
-              {chip('All', !category, () => { setCategory(null); updateUrl('category', null) })}
-              {chip('Accessories', category === 'Accessories', () => { const v = category === 'Accessories' ? null : 'Accessories'; setCategory(v); updateUrl('category', v) })}
-              {chip('Garments', category === 'Garments', () => { const v = category === 'Garments' ? null : 'Garments'; setCategory(v); updateUrl('category', v) })}
-              {chip('Toys', category === 'Toys', () => { const v = category === 'Toys' ? null : 'Toys'; setCategory(v); updateUrl('category', v) })}
-              {chip('Home', category === 'Home', () => { const v = category === 'Home' ? null : 'Home'; setCategory(v); updateUrl('category', v) })}
-              {chip('Baby', category === 'Baby', () => { const v = category === 'Baby' ? null : 'Baby'; setCategory(v); updateUrl('category', v) })}
-              {chip('Other', category === 'Other', () => { const v = category === 'Other' ? null : 'Other'; setCategory(v); updateUrl('category', v) })}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em', width: 70, flexShrink: 0 }}>Category</span>
+              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                {chip('All', !category, () => { setCategory(null); updateUrl('category', null) })}
+                {chip('Accessories', category === 'Accessories', () => { const v = category === 'Accessories' ? null : 'Accessories'; setCategory(v); updateUrl('category', v) })}
+                {chip('Garments', category === 'Garments', () => { const v = category === 'Garments' ? null : 'Garments'; setCategory(v); updateUrl('category', v) })}
+                {chip('Toys', category === 'Toys', () => { const v = category === 'Toys' ? null : 'Toys'; setCategory(v); updateUrl('category', v) })}
+                {chip('Home', category === 'Home', () => { const v = category === 'Home' ? null : 'Home'; setCategory(v); updateUrl('category', v) })}
+                {chip('Baby', category === 'Baby', () => { const v = category === 'Baby' ? null : 'Baby'; setCategory(v); updateUrl('category', v) })}
+                {chip('Other', category === 'Other', () => { const v = category === 'Other' ? null : 'Other'; setCategory(v); updateUrl('category', v) })}
+              </div>
             </div>
           </div>}
           </div>
