@@ -138,6 +138,20 @@ export default function PatternDetailClient({ initialPattern = null, patternId =
     </div>
   )
 
+  const [shared, setShared] = useState(false)
+
+  function handleShare() {
+    const url = window.location.href
+    if (navigator.share) {
+      navigator.share({ title: pattern.title, text: 'Check out this free crochet pattern!', url })
+    } else {
+      navigator.clipboard.writeText(url).then(() => {
+        setShared(true)
+        setTimeout(() => setShared(false), 2000)
+      })
+    }
+  }
+
   const videoId = getYouTubeId(pattern.tutorial_url)
 
   return (
@@ -160,6 +174,9 @@ export default function PatternDetailClient({ initialPattern = null, patternId =
           <div style={{ fontSize: 12, color: '#9ca3af' }}>by {pattern.author}</div>
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0 }}>
+          <button onClick={handleShare} style={{ fontSize: 13, color: shared ? '#2e7d32' : '#6b7280', background: shared ? '#e8f5e9' : 'white', padding: '6px 12px', borderRadius: 20, border: '1.5px solid #e5e7eb', cursor: 'pointer', fontWeight: shared ? 600 : 400 }}>
+            {shared ? '✓ Copied!' : '↗ Share'}
+          </button>
           {user && <a href="/saved" style={{ fontSize: 13, color: '#6b7280', textDecoration: 'none', padding: '6px 12px', borderRadius: 20, border: '1.5px solid #e5e7eb' }}>My patterns</a>}
           <button onClick={() => window.history.length > 1 ? window.history.back() : window.location.href = '/'} style={{ fontSize: 13, color: '#6b7280', background: 'white', padding: '6px 12px', borderRadius: 20, border: '1.5px solid #e5e7eb', cursor: 'pointer' }}>← Browse</button>
         </div>
