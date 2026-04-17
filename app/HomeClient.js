@@ -231,8 +231,8 @@ export default function HomeClient({ initialPatterns = [], difficulty: initDiffi
               {chip('Other', category === 'Other', () => { const v = category === 'Other' ? null : 'Other'; setCategory(v); updateUrl('category', v) })}
             </div>
           </div>
-        </div>}
-      </div>
+        </div>
+      </div>}
 
       {welcome && (
         <div style={{ background: '#dcfce7', borderBottom: '1px solid #bbf7d0', padding: '12px 24px', textAlign: 'center', animation: 'fadeIn 0.4s ease' }}>
