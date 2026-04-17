@@ -142,13 +142,20 @@ export default function PatternDetailClient({ initialPattern = null, patternId =
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8f7ff', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
+      <style>{`
+        @media (max-width: 768px) {
+          .pattern-split { grid-template-columns: 1fr !important; }
+          .pattern-tracker { position: static !important; max-height: none !important; }
+          .pattern-header-title { display: none !important; }
+        }
+      `}</style>
 
       {/* STICKY HEADER */}
-      <div style={{ background: 'white', borderBottom: '1px solid #ede9fe', padding: '12px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 1px 12px rgba(60,52,137,0.06)', position: 'sticky', top: 0, zIndex: 20 }}>
+      <div style={{ background: 'white', borderBottom: '1px solid #ede9fe', padding: '12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 1px 12px rgba(60,52,137,0.06)', position: 'sticky', top: 0, zIndex: 20 }}>
         <a href="/" style={{ textDecoration: 'none' }}>
           <span style={{ fontSize: 18, fontWeight: 700, color: '#3C3489' }}>Loopbase</span>
         </a>
-        <div style={{ flex: 1, margin: '0 20px', minWidth: 0 }}>
+        <div className="pattern-header-title" style={{ flex: 1, margin: '0 12px', minWidth: 0 }}>
           <div style={{ fontSize: 14, fontWeight: 600, color: '#111827', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{pattern.title}</div>
           <div style={{ fontSize: 12, color: '#9ca3af' }}>by {pattern.author}</div>
         </div>
@@ -159,7 +166,7 @@ export default function PatternDetailClient({ initialPattern = null, patternId =
       </div>
 
       {/* SPLIT LAYOUT */}
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '20px 24px', display: 'grid', gridTemplateColumns: '1fr 380px', gap: 20, alignItems: 'start' }}>
+      <div className="pattern-split" style={{ maxWidth: 1280, margin: '0 auto', padding: '20px 16px', display: 'grid', gridTemplateColumns: '1fr 380px', gap: 20, alignItems: 'start' }}>
 
         {/* LEFT — Video + Details */}
         <div>
@@ -264,7 +271,7 @@ export default function PatternDetailClient({ initialPattern = null, patternId =
         </div>
 
         {/* RIGHT — Sticky tracker */}
-        <div style={{ position: 'sticky', top: 72, maxHeight: 'calc(100vh - 92px)', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 12, paddingBottom: 20 }}>
+        <div className="pattern-tracker" style={{ position: 'sticky', top: 72, maxHeight: 'calc(100vh - 92px)', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 12, paddingBottom: 20 }}>
 
           <div style={{ background: 'white', borderRadius: 16, padding: 18, border: '1.5px solid #ede9fe' }}>
             <div style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>Progress</div>
