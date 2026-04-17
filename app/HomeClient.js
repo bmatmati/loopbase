@@ -230,8 +230,8 @@ export default function HomeClient({ initialPatterns = [], difficulty: initDiffi
               {chip('Baby', category === 'Baby', () => { const v = category === 'Baby' ? null : 'Baby'; setCategory(v); updateUrl('category', v) })}
               {chip('Other', category === 'Other', () => { const v = category === 'Other' ? null : 'Other'; setCategory(v); updateUrl('category', v) })}
             </div>
-          </div>}
-        </div>
+          </div>
+        </div>}
       </div>
 
       {welcome && (
