@@ -189,18 +189,32 @@ export default function HomeClient({ initialPatterns = [], difficulty: initDiffi
             </div>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-            <button onClick={() => setShowFilters(f => !f)} style={{ fontSize: 13, color: '#3C3489', background: '#f5f3ff', border: '1px solid #ede9fe', borderRadius: 20, padding: '6px 14px', cursor: 'pointer', fontWeight: 600 }}>
-              {showFilters ? 'Hide filters ▲' : 'Filters ▼'}
-            </button>
-            {(difficulty || time || format || category) && (
-              <button onClick={() => { setDifficulty(null); setTime(null); setFormat(null); setCategory(null) }}
-                style={{ fontSize: 12, color: '#e11d48', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600 }}>
-                Clear all
-              </button>
-            )}
-          </div>
-          {showFilters && <div className="filter-scroll" style={{ display: 'flex', gap: 8, paddingBottom: 14, flexWrap: 'wrap' }}>
+          <div style={{ background: 'white', borderRadius: 16, border: '1.5px solid #ede9fe', padding: '14px 16px', marginBottom: 4 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: showFilters ? 14 : 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <span style={{ fontSize: 13, fontWeight: 700, color: '#3C3489' }}>🔽 Filters</span>
+                {(difficulty || time || format || category) && (
+                  <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+                    {difficulty && <span style={{ background: '#3C3489', color: 'white', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 20 }}>{difficulty}</span>}
+                    {time && <span style={{ background: '#3C3489', color: 'white', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 20 }}>{time}</span>}
+                    {format && <span style={{ background: '#3C3489', color: 'white', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 20 }}>{format}</span>}
+                    {category && <span style={{ background: '#3C3489', color: 'white', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 20 }}>{category}</span>}
+                  </div>
+                )}
+              </div>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                {(difficulty || time || format || category) && (
+                  <button onClick={() => { setDifficulty(null); setTime(null); setFormat(null); setCategory(null) }}
+                    style={{ fontSize: 12, color: '#e11d48', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600 }}>
+                    Clear all
+                  </button>
+                )}
+                <button onClick={() => setShowFilters(f => !f)} style={{ fontSize: 12, color: '#6b7280', background: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: 20, padding: '5px 12px', cursor: 'pointer', fontWeight: 500 }}>
+                  {showFilters ? 'Hide ▲' : 'Show ▼'}
+                </button>
+              </div>
+            </div>
+          {showFilters && <div className="filter-scroll" style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
               <span style={{ fontSize: 11, fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>Level</span>
               {chip('All', !difficulty, () => { setDifficulty(null); updateUrl('difficulty', null) })}
@@ -236,6 +250,7 @@ export default function HomeClient({ initialPatterns = [], difficulty: initDiffi
               {chip('Other', category === 'Other', () => { const v = category === 'Other' ? null : 'Other'; setCategory(v); updateUrl('category', v) })}
             </div>
           </div>}
+          </div>
         </div>
       </div>
 
