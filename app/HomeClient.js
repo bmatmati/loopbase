@@ -23,6 +23,8 @@ export default function HomeClient({ initialPatterns = [], difficulty: initDiffi
   const [user, setUser] = useState(null)
   const [saved, setSaved] = useState([])
   const [welcome, setWelcome] = useState(false)
+  const [showBanner, setShowBanner] = useState(true)
+  const [showFilters, setShowFilters] = useState(false)
   const [category, setCategory] = useState(null)
   const [hoveredCard, setHoveredCard] = useState(null)
 
@@ -182,7 +184,18 @@ export default function HomeClient({ initialPatterns = [], difficulty: initDiffi
             </div>
           </div>
 
-          <div className="filter-scroll" style={{ display: 'flex', gap: 8, paddingBottom: 14, overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+            <button onClick={() => setShowFilters(f => !f)} style={{ fontSize: 13, color: '#3C3489', background: '#f5f3ff', border: '1px solid #ede9fe', borderRadius: 20, padding: '6px 14px', cursor: 'pointer', fontWeight: 600 }}>
+              {showFilters ? 'Hide filters ▲' : 'Filters ▼'}
+            </button>
+            {(difficulty || time || format || category) && (
+              <button onClick={() => { setDifficulty(null); setTime(null); setFormat(null); setCategory(null) }}
+                style={{ fontSize: 12, color: '#e11d48', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600 }}>
+                Clear all
+              </button>
+            )}
+          </div>
+          {showFilters && <div className="filter-scroll" style={{ display: 'flex', gap: 8, paddingBottom: 14, overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
               <span style={{ fontSize: 11, fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>Level</span>
               {chip('All', !difficulty, () => { setDifficulty(null); updateUrl('difficulty', null) })}
@@ -217,7 +230,7 @@ export default function HomeClient({ initialPatterns = [], difficulty: initDiffi
               {chip('Baby', category === 'Baby', () => { const v = category === 'Baby' ? null : 'Baby'; setCategory(v); updateUrl('category', v) })}
               {chip('Other', category === 'Other', () => { const v = category === 'Other' ? null : 'Other'; setCategory(v); updateUrl('category', v) })}
             </div>
-          </div>
+          </div>}
         </div>
       </div>
 
@@ -227,7 +240,7 @@ export default function HomeClient({ initialPatterns = [], difficulty: initDiffi
         </div>
       )}
 
-      <div style={{ background: '#f0ebff', borderBottom: '1px solid #e9d5ff', padding: '10px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      {showBanner && <div style={{ background: '#f0ebff', borderBottom: '1px solid #e9d5ff', padding: '10px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <span style={{ fontSize: 16 }}>🧩</span>
           <span style={{ fontSize: 13, color: '#6d28d9' }}>
