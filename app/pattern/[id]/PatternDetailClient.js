@@ -219,13 +219,12 @@ export default function PatternDetailClient({ initialPattern = null, patternId =
                         <span>{pattern.hook_size}</span>
                         {pattern.hook_affiliate && (
                           <a href={pattern.hook_affiliate} target="_blank" rel="noopener noreferrer"
-                            style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', background: '#f5f3ff', border: '1.5px solid #ede9fe', borderRadius: 8, padding: '5px 10px' }}>
-                            {pattern.hook_image_url && <img src={pattern.hook_image_url} alt="hook" style={{ width: 24, height: 24, objectFit: 'cover', borderRadius: 4 }} />}
-                            <div>
-                              <div style={{ fontSize: 11, fontWeight: 600, color: '#3C3489' }}>{pattern.hook_name || 'Shop hook'}</div>
+                            style={{ display: 'flex', alignItems: 'center', gap: 6, textDecoration: 'none', background: '#f5f3ff', border: '1px solid #ede9fe', borderRadius: 20, padding: '4px 10px 4px 6px', flexShrink: 0 }}>
+                            {pattern.hook_image_url && <img src={pattern.hook_image_url} alt="hook" style={{ width: 20, height: 20, objectFit: 'cover', borderRadius: '50%' }} />}
+                            <div style={{ lineHeight: 1.2 }}>
+                              <div style={{ fontSize: 11, fontWeight: 600, color: '#3C3489', whiteSpace: 'nowrap' }}>{pattern.hook_name ? pattern.hook_name.split(' ').slice(0,3).join(' ') : 'Shop hook'}</div>
                               {pattern.hook_price && <div style={{ fontSize: 10, color: '#9ca3af' }}>{pattern.hook_price}</div>}
                             </div>
-                            <span style={{ fontSize: 11, color: '#3C3489', fontWeight: 700 }}>→</span>
                           </a>
                         )}
                       </div>
@@ -240,13 +239,12 @@ export default function PatternDetailClient({ initialPattern = null, patternId =
                         <span>{pattern.yarn_weight}</span>
                         {pattern.yarn_affiliate && (
                           <a href={pattern.yarn_affiliate} target="_blank" rel="noopener noreferrer"
-                            style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', background: '#f5f3ff', border: '1.5px solid #ede9fe', borderRadius: 8, padding: '5px 10px' }}>
-                            {pattern.yarn_image_url && <img src={pattern.yarn_image_url} alt="yarn" style={{ width: 24, height: 24, objectFit: 'cover', borderRadius: 4 }} />}
-                            <div>
-                              <div style={{ fontSize: 11, fontWeight: 600, color: '#3C3489' }}>{pattern.yarn_name || 'Shop yarn'}</div>
+                            style={{ display: 'flex', alignItems: 'center', gap: 6, textDecoration: 'none', background: '#f5f3ff', border: '1px solid #ede9fe', borderRadius: 20, padding: '4px 10px 4px 6px', flexShrink: 0 }}>
+                            {pattern.yarn_image_url && <img src={pattern.yarn_image_url} alt="yarn" style={{ width: 20, height: 20, objectFit: 'cover', borderRadius: '50%' }} />}
+                            <div style={{ lineHeight: 1.2 }}>
+                              <div style={{ fontSize: 11, fontWeight: 600, color: '#3C3489', whiteSpace: 'nowrap' }}>{pattern.yarn_name ? pattern.yarn_name.split(' ').slice(0,3).join(' ') : 'Shop yarn'}</div>
                               {pattern.yarn_price && <div style={{ fontSize: 10, color: '#9ca3af' }}>{pattern.yarn_price}</div>}
                             </div>
-                            <span style={{ fontSize: 11, color: '#3C3489', fontWeight: 700 }}>→</span>
                           </a>
                         )}
                       </div>
