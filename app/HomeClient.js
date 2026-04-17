@@ -138,7 +138,7 @@ export default function HomeClient({ initialPatterns = [], difficulty: initDiffi
   )
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8f7ff', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
+    <div style={{ minHeight: '100vh', background: '#f8f7ff', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', overflowX: 'hidden', maxWidth: '100vw' }}>
 
       <style>{`
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
@@ -157,7 +157,7 @@ export default function HomeClient({ initialPatterns = [], difficulty: initDiffi
         }
       `}</style>
 
-      <div style={{ background: 'white', borderBottom: '1px solid #ede9fe', padding: '14px 24px 0', position: 'sticky', top: 0, zIndex: 10, boxShadow: '0 1px 12px rgba(60,52,137,0.06)' }}>
+      <div style={{ background: 'white', borderBottom: '1px solid #ede9fe', padding: '14px 16px 0', position: 'sticky', top: 0, zIndex: 10, boxShadow: '0 1px 12px rgba(60,52,137,0.06)', overflowX: 'hidden' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
 
           <div className="header-row" style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 14 }}>
