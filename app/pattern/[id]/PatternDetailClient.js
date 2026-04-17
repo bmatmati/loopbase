@@ -161,7 +161,7 @@ export default function PatternDetailClient({ initialPattern = null, patternId =
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0 }}>
           {user && <a href="/saved" style={{ fontSize: 13, color: '#6b7280', textDecoration: 'none', padding: '6px 12px', borderRadius: 20, border: '1.5px solid #e5e7eb' }}>My patterns</a>}
-          <a href="/" style={{ fontSize: 13, color: '#6b7280', textDecoration: 'none', padding: '6px 12px', borderRadius: 20, border: '1.5px solid #e5e7eb' }}>← Browse</a>
+          <button onClick={() => window.history.length > 1 ? window.history.back() : window.location.href = '/'} style={{ fontSize: 13, color: '#6b7280', background: 'white', padding: '6px 12px', borderRadius: 20, border: '1.5px solid #e5e7eb', cursor: 'pointer' }}>← Browse</button>
         </div>
       </div>
 

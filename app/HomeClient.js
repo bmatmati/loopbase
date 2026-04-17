@@ -68,6 +68,10 @@ export default function HomeClient({ initialPatterns = [], difficulty: initDiffi
   }
 
   async function toggleSave(p) {
+    if (!user) {
+      window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname)
+      return
+    }
     if (!user) { window.location.href = '/login'; return }
     const isSaved = saved.includes(p.id)
     if (isSaved) {
@@ -101,6 +105,13 @@ export default function HomeClient({ initialPatterns = [], difficulty: initDiffi
     if (d === 'Intermediate') return { bg: '#fef9c3', color: '#854d0e', border: '#fef08a' }
     if (d === 'Advanced') return { bg: '#fee2e2', color: '#991b1b', border: '#fecaca' }
     return { bg: '#f3f4f6', color: '#374151', border: '#e5e7eb' }
+  }
+
+    function updateUrl(key, value) {
+    const params = new URLSearchParams(window.location.search)
+    if (value) params.set(key, value)
+    else params.delete(key)
+    window.history.replaceState({}, '', '?' + params.toString())
   }
 
   const chip = (label, active, onClick) => (
@@ -174,10 +185,10 @@ export default function HomeClient({ initialPatterns = [], difficulty: initDiffi
           <div className="filter-scroll" style={{ display: 'flex', gap: 8, paddingBottom: 14, overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
               <span style={{ fontSize: 11, fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>Level</span>
-              {chip('All', !difficulty, () => setDifficulty(null))}
-              {chip('Beginner', difficulty === 'Beginner', () => setDifficulty(difficulty === 'Beginner' ? null : 'Beginner'))}
-              {chip('Intermediate', difficulty === 'Intermediate', () => setDifficulty(difficulty === 'Intermediate' ? null : 'Intermediate'))}
-              {chip('Advanced', difficulty === 'Advanced', () => setDifficulty(difficulty === 'Advanced' ? null : 'Advanced'))}
+              {chip('All', !difficulty, () => { setDifficulty(null); updateUrl('difficulty', null) })}
+              {chip('Beginner', difficulty === 'Beginner', () => { const v = difficulty === 'Beginner' ? null : 'Beginner'; setDifficulty(v); updateUrl('difficulty', v) })}
+              {chip('Intermediate', difficulty === 'Intermediate', () => { const v = difficulty === 'Intermediate' ? null : 'Intermediate'; setDifficulty(v); updateUrl('difficulty', v) })}
+              {chip('Advanced', difficulty === 'Advanced', () => { const v = difficulty === 'Advanced' ? null : 'Advanced'; setDifficulty(v); updateUrl('difficulty', v) })}
             </div>
             <div style={{ width: 1, background: '#e5e7eb', margin: '4px 8px' }} />
             <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
@@ -198,13 +209,13 @@ export default function HomeClient({ initialPatterns = [], difficulty: initDiffi
             <div style={{ width: 1, background: '#e5e7eb', margin: '4px 8px' }} />
             <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
               <span style={{ fontSize: 11, fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>Category</span>
-              {chip('All', !category, () => setCategory(null))}
-              {chip('Accessories', category === 'Accessories', () => setCategory(category === 'Accessories' ? null : 'Accessories'))}
-              {chip('Garments', category === 'Garments', () => setCategory(category === 'Garments' ? null : 'Garments'))}
-              {chip('Toys', category === 'Toys', () => setCategory(category === 'Toys' ? null : 'Toys'))}
-              {chip('Home', category === 'Home', () => setCategory(category === 'Home' ? null : 'Home'))}
-              {chip('Baby', category === 'Baby', () => setCategory(category === 'Baby' ? null : 'Baby'))}
-              {chip('Other', category === 'Other', () => setCategory(category === 'Other' ? null : 'Other'))}
+              {chip('All', !category, () => { setCategory(null); updateUrl('category', null) })}
+              {chip('Accessories', category === 'Accessories', () => { const v = category === 'Accessories' ? null : 'Accessories'; setCategory(v); updateUrl('category', v) })}
+              {chip('Garments', category === 'Garments', () => { const v = category === 'Garments' ? null : 'Garments'; setCategory(v); updateUrl('category', v) })}
+              {chip('Toys', category === 'Toys', () => { const v = category === 'Toys' ? null : 'Toys'; setCategory(v); updateUrl('category', v) })}
+              {chip('Home', category === 'Home', () => { const v = category === 'Home' ? null : 'Home'; setCategory(v); updateUrl('category', v) })}
+              {chip('Baby', category === 'Baby', () => { const v = category === 'Baby' ? null : 'Baby'; setCategory(v); updateUrl('category', v) })}
+              {chip('Other', category === 'Other', () => { const v = category === 'Other' ? null : 'Other'; setCategory(v); updateUrl('category', v) })}
             </div>
           </div>
         </div>
