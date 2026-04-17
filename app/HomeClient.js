@@ -309,17 +309,14 @@ export default function HomeClient({ initialPatterns = [], difficulty: initDiffi
                   </button>
                 </div>
 
-                <div style={{ padding: '16px 18px 18px' }}>
-                  <div style={{ fontWeight: 700, fontSize: 15, color: '#111827', marginBottom: 3, letterSpacing: '-0.2px', lineHeight: 1.3 }}>{p.title}</div>
-                  <div style={{ fontSize: 12, color: '#9ca3af', marginBottom: 12, fontWeight: 500 }}>by {p.author}</div>
-
-                  <div style={{ display: 'flex', gap: 6, marginBottom: 14, flexWrap: 'wrap' }}>
+                <div style={{ padding: '14px 16px 16px' }}>
+                  <div style={{ fontWeight: 700, fontSize: 14, color: '#111827', marginBottom: 2, letterSpacing: '-0.2px', lineHeight: 1.35, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{p.title}</div>
+                  <div style={{ fontSize: 12, color: '#9ca3af', marginBottom: 10, fontWeight: 500 }}>by {p.author}</div>
+                  <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
                     {[p.category, p.time_estimate, p.format === 'both' ? 'Video + Pattern' : p.format === 'video' ? 'Video' : 'Pattern'].map((tag, i) => tag && (
-                      <span key={i} style={{ background: '#f5f3ff', color: '#6d28d9', padding: '3px 9px', borderRadius: 8, fontSize: 11, fontWeight: 600, border: '1px solid #ede9fe' }}>{tag}</span>
+                      <span key={i} style={{ background: '#f5f3ff', color: '#6d28d9', padding: '2px 8px', borderRadius: 6, fontSize: 11, fontWeight: 600, border: '1px solid #ede9fe' }}>{tag}</span>
                     ))}
                   </div>
-
-
                 </div>
               </div>
             )
