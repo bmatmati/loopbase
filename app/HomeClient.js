@@ -93,6 +93,10 @@ export default function HomeClient({ initialPatterns = [], difficulty: initDiffi
 
   const filtered = patterns.filter(p =>
     (!category || p.category === category) &&
+    (!difficulty || p.difficulty === difficulty) &&
+    (!time || p.time_estimate === time) &&
+    (!format || p.format === format || (format === 'pattern' && (p.format === 'pattern' || p.format === 'both')) || (format === 'video' && (p.format === 'video' || p.format === 'both'))) &&
+    (
     p.title.toLowerCase().includes(search.toLowerCase()) ||
     p.author.toLowerCase().includes(search.toLowerCase()) ||
     (p.category || '').toLowerCase().includes(search.toLowerCase()) ||
@@ -100,6 +104,7 @@ export default function HomeClient({ initialPatterns = [], difficulty: initDiffi
     (p.yarn_weight || '').toLowerCase().includes(search.toLowerCase()) ||
     (p.yarn_type || '').toLowerCase().includes(search.toLowerCase()) ||
     (p.tags || '').toLowerCase().includes(search.toLowerCase())
+    )
   )
 
   const levelColor = (d) => {

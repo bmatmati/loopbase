@@ -160,7 +160,7 @@ export default function PatternDetailClient({ initialPattern = null, patternId =
         @media (max-width: 768px) {
           .pattern-split { grid-template-columns: 1fr !important; }
           .pattern-tracker { position: static !important; max-height: none !important; }
-          .pattern-header-title { display: none !important; }
+          .pattern-header-title { display: block !important; }
         }
       `}</style>
 
