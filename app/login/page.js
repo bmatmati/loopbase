@@ -9,10 +9,16 @@ export default function Login() {
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
 
+  const [loginContext, setLoginContext] = useState('')
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     if (params.get('error') === 'confirmation_failed') {
       setMessage('Error: Confirmation link expired. Please sign up again.')
+    }
+    if (params.get('redirect')) {
+      setLoginContext('save')
+      setMode('signup')
     }
   }, [])
 
@@ -31,7 +37,9 @@ export default function Login() {
       if (mode === 'signup') {
         setMessage('Account created! Check your email to confirm, then log in.')
       } else {
-        window.location.href = '/'
+        const params = new URLSearchParams(window.location.search)
+        const redirect = params.get('redirect')
+        window.location.href = redirect || '/'
       }
     }
     setLoading(false)
@@ -43,7 +51,9 @@ export default function Login() {
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
           <h1 style={{ fontSize: 24, fontWeight: 700, color: '#3C3489', margin: 0 }}>Loopbase</h1>
           <p style={{ fontSize: 13, color: '#999', marginTop: 4 }}>
-            {mode === 'login' ? 'Welcome back!' : 'Create a free account'}
+            {loginContext === 'save'
+              ? 'Create a free account to save patterns'
+              : mode === 'login' ? 'Welcome back!' : 'Create a free account'}
           </p>
         </div>
 
