@@ -239,26 +239,16 @@ export default function HomeClient({ initialPatterns = [], difficulty: initDiffi
             const level = levelColor(p.difficulty)
             const isHovered = hoveredCard === p.id
             return (
-              <a key={p.id} href={'/pattern/' + p.id} className="pattern-card"
-                style={{ animationDelay: i * 0.04 + 's', background: 'white', borderRadius: 18, overflow: 'hidden', border: '1.5px solid #ede9fe', transition: 'all 0.2s ease', boxShadow: isHovered ? '0 8px 32px rgba(60,52,137,0.12)' : '0 1px 4px rgba(60,52,137,0.06)', transform: isHovered ? 'translateY(-2px)' : 'none', textDecoration: 'none', color: 'inherit', display: 'block', cursor: 'pointer' }}
+              <div key={p.id} className="pattern-card"
+                style={{ animationDelay: i * 0.04 + 's', background: 'white', borderRadius: 18, overflow: 'hidden', border: '1.5px solid #ede9fe', transition: 'all 0.2s ease', boxShadow: isHovered ? '0 8px 32px rgba(60,52,137,0.12)' : '0 1px 4px rgba(60,52,137,0.06)', transform: isHovered ? 'translateY(-2px)' : 'none', cursor: 'pointer' }}
                 onMouseEnter={() => setHoveredCard(p.id)}
-                onMouseLeave={() => setHoveredCard(null)}>
+                onMouseLeave={() => setHoveredCard(null)}
+                onClick={() => window.location.href = '/pattern/' + p.id}>
 
                 <div style={{ position: 'relative', height: 210, background: '#f5f3ff', overflow: 'hidden' }}>
                   {p.image_url
                     ? <img src={p.image_url} alt={p.title} className="card-img"
-                      style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.4s ease', cursor: 'pointer' }}
-                      onClick={() => window.location.href = '/pattern/' + p.id}
-                      onMouseDown={e => {
-                        if (e.button !== 0) return
-                        const timer = setTimeout(() => { window.location.href = '/pattern/' + p.id }, 600)
-                        e.currentTarget.addEventListener('mouseup', () => clearTimeout(timer), { once: true })
-                        e.currentTarget.addEventListener('mouseleave', () => clearTimeout(timer), { once: true })
-                      }}
-                      onTouchStart={e => {
-                        const timer = setTimeout(() => { window.location.href = '/pattern/' + p.id }, 600)
-                        e.currentTarget.addEventListener('touchend', () => clearTimeout(timer), { once: true })
-                      }}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.4s ease' }}
                     />
                     : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 52 }}>🧶</div>
                   }
@@ -267,7 +257,7 @@ export default function HomeClient({ initialPatterns = [], difficulty: initDiffi
                   <span style={{ position: 'absolute', top: 12, left: 12, padding: '4px 10px', borderRadius: 20, fontSize: 11, fontWeight: 700, letterSpacing: '0.03em', background: level.bg, color: level.color, border: '1px solid ' + level.border }}>
                     {p.difficulty}
                   </span>
-                  <button className="heart-btn" onClick={() => toggleSave(p)} style={{ position: 'absolute', top: 10, right: 10, width: 34, height: 34, borderRadius: '50%', border: 'none', background: 'white', cursor: 'pointer', fontSize: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.12)', transition: 'transform 0.15s ease', color: saved.includes(p.id) ? '#e11d48' : '#9ca3af' }}>
+                  <button className="heart-btn" onClick={e => { e.stopPropagation(); toggleSave(p) }} style={{ position: 'absolute', top: 10, right: 10, width: 44, height: 44, borderRadius: '50%', border: 'none', background: 'white', cursor: 'pointer', fontSize: 18, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.12)', transition: 'transform 0.15s ease', color: saved.includes(p.id) ? '#e11d48' : '#9ca3af', zIndex: 2 }}>
                     {saved.includes(p.id) ? '♥' : '♡'}
                   </button>
                 </div>
@@ -284,7 +274,7 @@ export default function HomeClient({ initialPatterns = [], difficulty: initDiffi
 
 
                 </div>
-              </a>
+              </div>
             )
           })}
         </div>
