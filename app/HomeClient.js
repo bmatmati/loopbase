@@ -195,7 +195,7 @@ export default function HomeClient({ initialPatterns = [], difficulty: initDiffi
               </button>
             )}
           </div>
-          {showFilters && <div className="filter-scroll" style={{ display: 'flex', gap: 8, paddingBottom: 14, overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          {showFilters && <div className="filter-scroll" style={{ display: 'flex', gap: 8, paddingBottom: 14, flexWrap: 'wrap' }}>
             <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
               <span style={{ fontSize: 11, fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>Level</span>
               {chip('All', !difficulty, () => { setDifficulty(null); updateUrl('difficulty', null) })}
